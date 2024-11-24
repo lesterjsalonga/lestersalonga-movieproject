@@ -7,8 +7,8 @@ const Lists = () => {
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
   const [lists, setLists] = useState([]);
+  const [selectedMovies, setSelectedMovies] = useState([]);
 
-  // Function to fetch movies
   const getMovies = async () => {
     try {
       const response = await axios.get('/movies', {
@@ -24,31 +24,40 @@ const Lists = () => {
   };
 
   useEffect(() => {
-    getMovies(); // Fetch movies when the component loads
+    getMovies();
   }, []);
 
-  // Delete movie function
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure that you want to delete this data?')) {
+  const handleDeleteSelected = async () => {
+    if (window.confirm('Are you sure you want to delete the selected movies?')) {
       try {
-        const response = await axios.delete(`/movies/${id}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
+        // Batch delete
+        await Promise.all(
+          selectedMovies.map((id) =>
+            axios.delete(`/movies/${id}`, {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            })
+          )
+        );
 
-        if (response.status === 200) {
-          // Update the UI by removing the deleted movie from the list
-          setLists((prevLists) => prevLists.filter((movie) => movie.id !== id));
-          alert('Movie deleted successfully.');
-        } else {
-          alert('Failed to delete the movie. Please try again.');
-        }
+        // Update UI after deletion
+        setLists((prevLists) =>
+          prevLists.filter((movie) => !selectedMovies.includes(movie.id))
+        );
+        setSelectedMovies([]);
+        alert('Selected movies deleted successfully.');
       } catch (error) {
-        console.error('Error deleting movie:', error);
-        alert('Failed to delete the movie. Please try again.');
+        console.error('Error deleting movies:', error);
+        alert('Failed to delete some or all movies. Please try again.');
       }
     }
+  };
+
+  const handleSelect = (id) => {
+    setSelectedMovies((prev) =>
+      prev.includes(id) ? prev.filter((movieId) => movieId !== id) : [...prev, id]
+    );
   };
 
   return (
@@ -61,12 +70,33 @@ const Lists = () => {
         >
           Create new
         </button>
+        {selectedMovies.length > 0 && (
+          <button
+            className="button-delete"
+            type="button"
+            onClick={handleDeleteSelected}
+          >
+            Delete Selected
+          </button>
+        )}
       </div>
       <div className="table-container">
         <table className="movie-lists">
           <thead>
             <tr>
+              <th>
+                <input
+                  type="checkbox"
+                  onChange={(e) =>
+                    setSelectedMovies(
+                      e.target.checked ? lists.map((movie) => movie.id) : []
+                    )
+                  }
+                  checked={selectedMovies.length === lists.length && lists.length > 0}
+                />
+              </th>
               <th>ID</th>
+              <th>Poster</th>
               <th>Title</th>
               <th>Popularity</th>
               <th>Vote Average</th>
@@ -77,7 +107,21 @@ const Lists = () => {
           <tbody>
             {lists.map((movie) => (
               <tr key={movie.id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedMovies.includes(movie.id)}
+                    onChange={() => handleSelect(movie.id)}
+                  />
+                </td>
                 <td>{movie.id}</td>
+                <td>
+                  <img
+                    src={movie.posterPath}
+                    alt={movie.title}
+                    className="movie-poster"
+                  />
+                </td>
                 <td>{movie.title}</td>
                 <td>{movie.popularity}</td>
                 <td>{movie.voteAverage}</td>
@@ -93,7 +137,7 @@ const Lists = () => {
                   <button
                     className="button-delete"
                     type="button"
-                    onClick={() => handleDelete(movie.id)}
+                    onClick={() => handleDeleteSelected(movie.id)}
                   >
                     Delete
                   </button>

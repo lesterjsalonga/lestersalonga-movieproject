@@ -1,4 +1,3 @@
-/* Animated gradient background */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -8,7 +7,6 @@ body {
   min-height: 100vh;
 }
 
-/* Animation keyframes for the background gradient */
 @keyframes gradientBG {
   0% {
     background-position: 0% 50%;
@@ -21,86 +19,97 @@ body {
   }
 }
 
-/* Main container */
 .lists-container {
   width: 100%;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  background-color: rgba(255, 255, 255, 0.85); /* Slight transparency for a frosted-glass effect */
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.9); 
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   margin: 2rem auto;
   max-width: 1200px;
   overflow: hidden;
 }
 
-/* Create button container */
 .create-container {
-  align-self: flex-end;
+  display: flex;
+  gap: 1rem;
+  align-items: center;
   margin-bottom: 1rem;
-}
-
-/* Buttons */
-.button-list,
-.button-edit,
-.button-delete {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: all 0.3s ease-in-out;
 }
 
 .button-list {
   background-color: #007bff;
   color: #fff;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
 }
 
-.button-edit {
-  background-color: #ffc107;
-  color: #000;
-  margin-right: 0.5rem;
+.button-list:hover {
+  background-color: #0056b3;
 }
 
 .button-delete {
   background-color: #dc3545;
-  color: #fff;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
 }
 
-.button-list:hover,
-.button-edit:hover,
 .button-delete:hover {
-  opacity: 0.9;
-  transform: scale(1.05);
+  background-color: #b3242e;
 }
 
-/* Table container with smooth scrolling */
+.button-edit {
+  background-color: #ffc107;
+  color: black;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.button-edit:hover {
+  background-color: #e0a800;
+}
+
 .table-container {
   overflow-x: auto;
   border: 1px solid #dee2e6;
-  border-radius: 10px;
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 15px;
+  background-color: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Table styling */
 .movie-lists {
   width: 100%;
   border-collapse: collapse;
-  text-align: left;
+  text-align: center;
 }
 
 .movie-lists thead {
   background-color: #343a40;
   color: #fff;
+  text-transform: uppercase;
 }
 
 .movie-lists th,
 .movie-lists td {
-  padding: 0.8rem;
+  padding: 1rem;
   border: 1px solid #dee2e6;
+  font-size: 0.95rem;
 }
 
 .movie-lists tbody tr:nth-child(odd) {
@@ -113,13 +122,31 @@ body {
 
 .movie-lists tbody tr:hover {
   background-color: #dfe4ea;
+  transition: background-color 0.3s ease;
 }
 
-.movie-lists th {
-  text-transform: uppercase;
+.movie-poster {
+  width: 50px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
 }
 
-/* Scrollbar styling */
+.movie-poster:hover {
+  transform: scale(1.1);
+}
+
+.movie-lists th:first-child,
+.movie-lists td:first-child {
+  text-align: center;
+}
+
+.movie-lists th:first-child {
+  width: 5%;
+}
+
 ::-webkit-scrollbar {
   width: 12px;
   height: 12px;
