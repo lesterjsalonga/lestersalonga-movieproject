@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Outlet } from 'react-router-dom';
 import './Form.css';
 
 const Form = () => {
@@ -19,7 +19,8 @@ const Form = () => {
   const API_BASE_URL = 'https://api.themoviedb.org/3';
   const TMDB_HEADERS = {
     Accept: 'application/json',
-    Authorization: 'Bearer YOUR_TMDB_API_TOKEN_HERE',
+    Authorization:
+      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI',
   };
 
   const generateImageUrl = (path) => {
@@ -77,20 +78,14 @@ const Form = () => {
 
     try {
       if (movieId) {
-        await axios({
-          method: 'PATCH',
-          url: `/movies/${movieId}`,
-          data: data,
+        await axios.patch(`/movies/${movieId}`, data, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
         alert('Movie updated successfully.');
       } else {
-        await axios({
-          method: 'POST',
-          url: '/movies',
-          data: data,
+        await axios.post('/movies', data, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
@@ -240,6 +235,37 @@ const Form = () => {
           </button>
         </form>
       </div>
+      {movieId && selectedMovie && (
+        <div>
+          <hr />
+          <nav>
+            <ul className="tabs">
+              <li
+                onClick={() => {
+                  navigate(`/main/movies/form/${movieId}/cast-and-crews`);
+                }}
+              >
+                Cast & Crews
+              </li>
+              <li
+                onClick={() => {
+                  navigate(`/main/movies/form/${movieId}/videos`);
+                }}
+              >
+                Videos
+              </li>
+              <li
+                onClick={() => {
+                  navigate(`/main/movies/form/${movieId}/photos`);
+                }}
+              >
+                Photos
+              </li>
+            </ul>
+          </nav>
+          <Outlet />
+        </div>
+      )}
     </div>
   );
 };
