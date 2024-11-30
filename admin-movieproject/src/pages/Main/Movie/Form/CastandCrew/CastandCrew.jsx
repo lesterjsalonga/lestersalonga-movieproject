@@ -38,37 +38,38 @@ function Casts() {
   }, [movieId, getAll]);
 
   const handleSearchPerson = useCallback(async (page = 1) => {
-    if (!query.trim()) {
-      searchRef.current.style.border = '2px solid red';
-      setTimeout(() => {
-        searchRef.current.style.border = '1px solid #ccc';
-      }, 2000);
-      return;
-    }
-
     setNotFound(true);
-
     try {
+      if (!query || query.trim() === '') {
+        searchRef.current.style.border = '2px solid red';
+        console.log("Input is empty or undefined");
+        setTimeout(() => {
+          searchRef.current.style.border = '1px solid #ccc';
+          setNotFound(false);
+        }, 2000);
+        return;
+      }
       const response = await axios({
         method: 'get',
         url: `https://api.themoviedb.org/3/search/person?query=${query}&include_adult=false&language=en-US&page=${page}`,
         headers: {
           accept: 'application/json',
-          Authorization: `Bearer ${auth.accessToken}`,
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MGY0ZjFlMmNhODQ1ZjA3NWY5MmI5ZDRlMGY3ZTEwYiIsIm5iZiI6MTcyOTkyNjY3NC40NzIwOTksInN1YiI6IjY3MTM3ODRmNjUwMjQ4YjlkYjYxZTgxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RRJNLOg8pmgYoomiCWKtwkw74T3ZtAs7ZScqxo1bzWg'
         },
       });
 
-      if (response.data.results.length === 0) {
-        setNotFound(false);
-        setSelectedCast({});
+      if (response.data.results.lenght === 0) {
+        console.log("Not Found");
+        setSelectedCast([])
       } else {
         setNotFound(false);
         setSelectedCast(response.data.results[0]);
+        console.log(response.data.results);
       }
     } catch (error) {
       console.error("Search error:", error);
     }
-  }, [query]);
+  }, [query])
 
   const handleSave = async () => {
     if (!selectedCast || !selectedCast.name || !selectedCast.characterName) {
@@ -113,7 +114,7 @@ function Casts() {
       try {
         await axios({
           method: 'delete',
-          url: `/admin/casts/${id}`,
+          url: `/casts/${id}`,
           headers: {
             Authorization: `Bearer ${auth.accessToken}`,
           },
@@ -262,14 +263,22 @@ function Casts() {
             </button>
           </div>
 
-          <div className="cast-detail-box">
-            <div className="image-container-center">
+          <div className='cast-detail-box'>
+            <div className='image-container-center'>
+              <div className='image-container'>
               <img
-                alt="cast"
-                src={selectedCast.profile_path ? `https://image.tmdb.org/t/p/original/${selectedCast.profile_path}` : selectedCast.url}
-                className="img-cast"
+                alt="image-cast"
+                src={selectedCast?.profile_path
+                  ? `https://image.tmdb.org/t/p/original/${selectedCast.profile_path}`
+                  : selectedCast?.url
+                    ? selectedCast.url
+                    : require('../../Form/CastandCrew/not_available.jpg')
+                }
+                className='img-cast'
               />
+              </div>
             </div>
+
             <div className="info-text">
               <div className="input-group">
                 <label>Cast Name:</label>
