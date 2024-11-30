@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { useParams, useNavigate, Outlet } from 'react-router-dom';
 import './Form.css';
+import { AuthContext } from '../../../../utils/context/AuthToken';
 
 const Form = () => {
   const [query, setQuery] = useState('');
@@ -20,7 +21,7 @@ const Form = () => {
   const TMDB_HEADERS = {
     Accept: 'application/json',
     Authorization:
-      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI',
+      'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI2NTAxODgxZmE3YWRhZTQzYWY0MGFmNDA1YzFjODliNCIsIm5iZiI6MTczMjU5NTU3OS4yMjMwMTI3LCJzdWIiOiI2NzEyZmFiYTI1YzcwYjhiMWQ2N2Y4YjQiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.oJ-YA-BPl-l8XBcp_VYDJDTO66e31OMKA-igarucAqE',
   };
 
   const generateImageUrl = (path) => {
@@ -267,6 +268,7 @@ const Form = () => {
         </div>
       )}
     </div>
+    
   );
 };
 

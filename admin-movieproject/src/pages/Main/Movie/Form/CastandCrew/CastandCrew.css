@@ -1,0 +1,311 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: rgb(30, 30, 30); /* Dark background */
+  color: #000000; /* Light grey font color for readability */
+}
+
+/* Main Container */
+.cast-box {
+  background-color: rgb(40, 40, 40);
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  border-radius: 10px;
+  padding: 25px;
+  height: 100%;
+}
+
+/* Cast View Section */
+.Cast-View-Box {
+  flex: 2;
+  background-color: rgb(50, 50, 50);
+  border-radius: 12px;
+  padding: 20px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.Cast-View-Box h3 {
+  text-align: center;
+  color: hsl(214, 83%, 75%); /* Soft blue for headings */
+  margin-bottom: 15px;
+}
+
+/* Card Wrapper - Horizontal Layout */
+.card-display-cast {
+  display: flex;
+  flex-direction: row;  /* Align items horizontally */
+  gap: 20px;
+  overflow-x: auto;     /* Enable horizontal scroll */
+  padding: 10px 0;      /* Add padding to top and bottom */
+  height: 400px;        /* Fixed height */
+  scrollbar-width: thin; /* Optional: makes scrollbar thinner */
+  -ms-overflow-style: none; /* For IE/Edge */
+}
+
+.card-display-cast::-webkit-scrollbar {
+  height: 8px;   /* Scrollbar height */
+}
+
+.card-display-cast::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+.card-display-cast::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.card-display-cast::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Card Styling */
+.card {
+  width: 220px;
+  background-color: rgb(80, 80, 80);
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
+}
+
+.image-casts {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px 10px 0 0;
+}
+
+.container {
+  padding: 15px;
+}
+
+.container h4 {
+  font-size: 18px;
+  color: hsl(214, 83%, 75%); /* Soft blue for subheadings */
+}
+
+.container p {
+  font-size: 15px;
+  color: hsl(0, 0%, 80%); /* Light grey for general text */
+}
+
+/* Button Group */
+.buttons-group {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.edit-button,
+.delete-button {
+  background-color: rgb(30, 30, 30);
+  color: #fff;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: hsl(120, 60%, 45%); /* Green on hover for edit */
+}
+
+.delete-button:hover {
+  background-color: hsl(0, 70%, 50%); /* Red on hover for delete */
+}
+
+/* Search Box */
+.Search-Box {
+  flex: 1;
+  background-color: rgb(60, 60, 60);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.search-box-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.input-search-person {
+  padding: 12px 15px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: rgb(80, 80, 80);
+  color: white;
+  width: 100%;
+  outline: none;
+}
+
+.input-search-person:focus {
+  border-color: hsl(214, 83%, 75%); /* Soft blue for focused input */
+}
+
+.button-search {
+  padding: 12px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: hsl(29, 83%, 55%);
+  color: white;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.button-search:hover {
+  background-color: hsl(34, 90%, 60%);
+}
+
+.save-button {
+  padding: 12px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: hsl(120, 60%, 40%);
+  color: white;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.save-button:hover {
+  background-color: hsl(120, 70%, 45%);
+}
+
+/* Cast Detail Box */
+.cast-detail-box {
+  margin-top: 20px;
+  background-color: rgb(50, 50, 50);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.image-container-center {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.image-container {
+  width: 150px;
+  height: 220px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: rgb(70, 70, 70);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img-cast {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.info-text {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+label {
+  text-align: right;
+  font-size: 14px;
+  font-weight: bold;
+  color: hsl(0, 0%, 80%); /* Light grey for labels */
+  flex: 1;
+}
+
+input {
+  flex: 2;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: rgb(80, 80, 80);
+  color: white;
+}
+
+input:focus {
+  outline: none;
+  border-color: hsl(214, 83%, 75%); /* Soft blue for focused input */
+}
+
+/* Buttons for Cast Detail Box */
+.edit-back-btn {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.edit-btn,
+.back-btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.edit-btn {
+  background-color: hsl(214, 83%, 55%);
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: hsl(214, 90%, 60%);
+}
+
+.back-btn {
+  background-color: hsl(0, 0%, 50%);
+  color: white;
+}
+
+.back-btn:hover {
+  background-color: hsl(0, 0%, 60%);
+}
+
+/* No Cast Found */
+.no-cast {
+  font-size: 18px;
+  color: #bbb; /* Light grey for 'no cast found' message */
+  text-align: center;
+  margin-top: 20px;
+}
+
