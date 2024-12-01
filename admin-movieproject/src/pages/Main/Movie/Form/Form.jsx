@@ -64,39 +64,75 @@ const Form = () => {
       alert('Please search and select a movie.');
       return;
     }
-
+  
+    const requiredFields = [
+      { name: 'backdrop_path', value: selectedMovie.backdrop_path },
+      { name: 'title', value: selectedMovie.title },
+      { name: 'overview', value: selectedMovie.overview },
+      { name: 'popularity', value: selectedMovie.popularity },
+      { name: 'release_date', value: selectedMovie.release_date },
+      { name: 'vote_average', value: selectedMovie.vote_average },
+    ];
+  
+    const missingFields = requiredFields.filter(field => !field.value);
+  
+    if (missingFields.length > 0) {
+      setError(`Missing required fields: ${missingFields.map(field => field.name).join(', ')}`);
+      return;
+    }
+  
+    // Handle backdrop image (fallback if missing)
+    const backdropPath = selectedMovie.backdrop_path
+      ? generateImageUrl(selectedMovie.backdrop_path)
+      : ''; // Fallback to empty string if not available
+  
+    // If backdrop image is required, but missing, show error
+    if (!backdropPath) {
+      setError('Backdrop image is required.');
+      return;
+    }
+  
     const data = {
       tmdbId: selectedMovie.id,
       title: selectedMovie.title,
       overview: selectedMovie.overview,
-      popularity: selectedMovie.popularity,
-      releaseDate: selectedMovie.release_date,
-      voteAverage: selectedMovie.vote_average,
-      backdropPath: generateImageUrl(selectedMovie.backdrop_path),
+      popularity: parseFloat(selectedMovie.popularity), 
+      releaseDate: selectedMovie.release_date, 
+      voteAverage: parseFloat(selectedMovie.vote_average), 
+      backdropPath: backdropPath, 
       posterPath: generateImageUrl(selectedMovie.poster_path),
-      isFeatured: 0,
+      isFeatured: selectedMovie.isFeatured || false, 
     };
-
+  
+    console.log('Data to be sent:', data); 
+  
     try {
       if (movieId) {
-        await axios.patch(`/movies/${movieId}`, data, {
+        const response = await axios.patch(`/movies/${movieId}`, data, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+        console.log('Movie updated response:', response);
         alert('Movie updated successfully.');
       } else {
-        await axios.post('/movies', data, {
+        // Creating new movie
+        const response = await axios.post('/movies', data, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
         });
+        console.log('Movie created response:', response);
         alert('Movie created successfully.');
       }
       navigate('/main/movies');
     } catch (err) {
       setError('Error saving movie. Please try again later.');
-      console.error(err);
+      console.error('Save movie error:', err.response);
+      if (err.response && err.response.data && err.response.data.errors) {
+        console.error('Error details:', err.response.data.errors);
+        setError(`Validation errors: ${err.response.data.errors.map(error => error.message).join(', ')}`);
+      }
     }
   };
 
@@ -236,6 +272,7 @@ const Form = () => {
           </button>
         </form>
       </div>
+
       {movieId && selectedMovie && (
         <div>
           <hr />
@@ -268,7 +305,6 @@ const Form = () => {
         </div>
       )}
     </div>
-    
   );
 };
 

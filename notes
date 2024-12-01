@@ -1,0 +1,5 @@
+1. Movie creation bug. ayaw ma add nung ibang movie. Di ko alam kung sa project yung bug or sa TMDB
+Baka may mali yung data galing sa TMDB kaya di ma save. So Far yung Moana lang yung ayaw, pero yung mga ibang movies 
+na a-add ng maayos
+
+2. Videos link bug. kapag nag add ng video with Youtube link, dinidisplay na is null or undefined, pero pag ni-reload yung page, gumagana na. 

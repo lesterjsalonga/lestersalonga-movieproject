@@ -19,7 +19,7 @@ class VideosController
 
     private function processResourceRequest(string $method, string $id): void
     {
-        $cast = $this->gateway->getAll($id);
+        $cast = $this->gateway->get($id);
         if (!$cast) {
             http_response_code(404);
             echo json_encode(["message" => "Video not found"]);
@@ -85,13 +85,13 @@ class VideosController
                                 $data['url'] = $upload_path . $new_profile_path;
                                 move_uploaded_file($temp_path, $upload_path . $new_profile_path);
                             } else {
-                                $errors[] = "File size is too large, maximum file size is 5Mb";
+                                $errors[] = "File size is too large, maximum file size is 5Mbs";
                             }
                         } else {
                             $errors[] = "File already exists in upload folder";
                         }
                     } else {
-                        $errors[] = "Invalid file format";
+                        $errors[] = "Invalid file format!";
                     }
                 } 
                 
@@ -121,9 +121,9 @@ class VideosController
     private function processCollectionRequest(string $method): void
     {
         switch ($method) {
-            // case "GET":
-            //     echo json_encode($this->gateway->getAll());
-            //     break;
+            case "GET":
+                echo json_encode($this->gateway->getAll());
+                break;
 
             case "POST":
                 $jsonData = (array) json_decode(file_get_contents("php://input"), true);
@@ -190,9 +190,9 @@ class VideosController
             $errors[] = "Movie ID is required.";
         }
 
-        if ($is_new && empty($data["url"])) {
-            $errors[] = "Video URL is required.";
-        }
+        // if ($is_new && empty($data["url"])) {
+        //     $errors[] = "Video URL is required.";
+        // }
 
         return $errors;
     }
