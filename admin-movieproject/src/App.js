@@ -10,6 +10,7 @@ import Movie from './pages/Main/Movie/Movie';
 import Lists from './pages/Main/Movie/Lists/Lists';
 import Form from './pages/Main/Movie/Form/Form';
 import CastandCrew from './pages/Main/Movie/Form/CastandCrew/CastandCrew';
+import Videos from './pages/Main/Movie/Form/Videos/Videos';
 import { AuthProvider } from './utils/context/AuthToken';
 import { AuthContext } from './utils/context/AuthToken';
 
@@ -43,23 +44,13 @@ const router = createBrowserRouter([
                 element: <CastandCrew/>,
               },
               {
-                path: '/main/movies/form/:movieId/cast-and-crews',
-                element: (
-                  <h1>
-                    Change this for cast & crew CRUD functionality component.
-                  </h1>
-                ),
+                path: 'videos/:tmdbId?',
+                element: <Videos/>,
               },
               {
                 path: '/main/movies/form/:movieId/photos',
                 element: (
                   <h1>Change this for photos CRUD functionality component.</h1>
-                ),
-              },
-              {
-                path: '/main/movies/form/:movieId/videos',
-                element: (
-                  <h1>Change this for videos CRUD functionality component.</h1>
                 ),
               },
             ],
