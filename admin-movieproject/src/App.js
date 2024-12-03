@@ -11,6 +11,7 @@ import Lists from './pages/Main/Movie/Lists/Lists';
 import Form from './pages/Main/Movie/Form/Form';
 import CastandCrew from './pages/Main/Movie/Form/CastandCrew/CastandCrew';
 import Videos from './pages/Main/Movie/Form/Videos/Videos';
+import Photo from './pages/Main/Movie/Form/Photos/Photos';
 import { AuthProvider } from './utils/context/AuthToken';
 import { AuthContext } from './utils/context/AuthToken';
 
@@ -28,30 +29,28 @@ const router = createBrowserRouter([
     element: <Main />,
     children: [
       {
-        path: '/main/movies',
+        path: 'movies',
         element: <Movie />,
         children: [
           {
-            path: '/main/movies',
+            path: '',
             element: <Lists />,
           },
           {
-            path: '/main/movies/form/:movieId?',
+            path: 'form/:movieId?',
             element: <Form />,
             children: [
               {
                 path: 'cast-and-crews/:tmdbId?',
-                element: <CastandCrew/>,
+                element: <CastandCrew />,
               },
               {
                 path: 'videos/:tmdbId?',
-                element: <Videos/>,
+                element: <Videos />,
               },
               {
-                path: '/main/movies/form/:movieId/photos',
-                element: (
-                  <h1>Change this for photos CRUD functionality component.</h1>
-                ),
+                path: 'photos/:tmdbId?',
+                element: <Photo />,
               },
             ],
           },

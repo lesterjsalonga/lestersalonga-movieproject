@@ -208,4 +208,34 @@ button:hover {
   border-radius: 5px;
 }
 
+/* Style the tabs container */
+.tabs {
+  list-style-type: none;
+  display: flex;
+  justify-content: space-around;
+  padding: 0;
+  margin: 0;
+}
 
+/* Style each tab */
+.tabs li {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: black;  /* Set font color to black */
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Change tab color when it's active */
+.tabs li.active {
+  background-color: #007bff;
+  color: white;  /* Active tab text color becomes white */
+}
+
+/* Hover effect for tabs */
+.tabs li:hover {
+  background-color: #e6f7ff;
+}

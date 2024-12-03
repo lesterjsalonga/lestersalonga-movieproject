@@ -1,10 +1,14 @@
 import axios from 'axios';
-import { useCallback, useEffect, useState } from 'react';
-import { useParams, useNavigate, Outlet } from 'react-router-dom';
+import { useCallback, useEffect, useState, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import './Form.css';
 import { AuthContext } from '../../../../utils/context/AuthToken';
+import CastandCrew from '../Form/CastandCrew/CastandCrew';
+import Photos from '../Form/Photos/Photos';
+import Videos from '../Form/Videos/Videos';
 
 const Form = () => {
+  const { auth } = useContext(AuthContext);
   const [query, setQuery] = useState('');
   const [searchedMovieList, setSearchedMovieList] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(undefined);
@@ -14,6 +18,7 @@ const Form = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('cast'); // Default tab is 'cast'
   const navigate = useNavigate();
   let { movieId } = useParams();
 
@@ -66,7 +71,6 @@ const Form = () => {
     }
   
     const requiredFields = [
-      { name: 'backdrop_path', value: selectedMovie.backdrop_path },
       { name: 'title', value: selectedMovie.title },
       { name: 'overview', value: selectedMovie.overview },
       { name: 'popularity', value: selectedMovie.popularity },
@@ -81,45 +85,38 @@ const Form = () => {
       return;
     }
   
-    // Handle backdrop image (fallback if missing)
-    const backdropPath = selectedMovie.backdrop_path
-      ? generateImageUrl(selectedMovie.backdrop_path)
-      : ''; // Fallback to empty string if not available
-  
-    // If backdrop image is required, but missing, show error
-    if (!backdropPath) {
-      setError('Backdrop image is required.');
-      return;
-    }
+    // Ensure backdrop path is always set
+    const backdropPath = selectedMovie.backdrop_path 
+      ? generateImageUrl(selectedMovie.backdrop_path) 
+      : generateImageUrl(selectedMovie.poster_path); // Fallback to poster path if no backdrop
   
     const data = {
       tmdbId: selectedMovie.id,
       title: selectedMovie.title,
       overview: selectedMovie.overview,
-      popularity: parseFloat(selectedMovie.popularity), 
-      releaseDate: selectedMovie.release_date, 
-      voteAverage: parseFloat(selectedMovie.vote_average), 
-      backdropPath: backdropPath, 
+      popularity: parseFloat(selectedMovie.popularity),
+      releaseDate: selectedMovie.release_date,
+      voteAverage: parseFloat(selectedMovie.vote_average),
       posterPath: generateImageUrl(selectedMovie.poster_path),
-      isFeatured: selectedMovie.isFeatured || false, 
+      backdropPath: backdropPath, // Always include backdrop path
+      isFeatured: selectedMovie.isFeatured || false,
     };
   
-    console.log('Data to be sent:', data); 
+    console.log('Data to be sent:', data);
   
     try {
       if (movieId) {
         const response = await axios.patch(`/movies/${movieId}`, data, {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${auth.accessToken}`,
           },
         });
         console.log('Movie updated response:', response);
         alert('Movie updated successfully.');
       } else {
-        // Creating new movie
         const response = await axios.post('/movies', data, {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${auth.accessToken}`,
           },
         });
         console.log('Movie created response:', response);
@@ -150,6 +147,7 @@ const Form = () => {
             poster_path: response.data.posterPath,
             release_date: response.data.releaseDate,
             vote_average: response.data.voteAverage,
+            backdrop_path: response.data.backdropPath || '', // Default empty string
           });
         } catch (err) {
           setError('Error fetching movie details. Please try again later.');
@@ -279,29 +277,29 @@ const Form = () => {
           <nav>
             <ul className="tabs">
               <li
-                onClick={() => {
-                  navigate(`/main/movies/form/${movieId}/cast-and-crews`);
-                }}
+                className={activeTab === 'cast' ? 'active' : ''}
+                onClick={() => setActiveTab('cast')}
               >
-                Cast & Crews
+                Cast & Crew
               </li>
               <li
-                onClick={() => {
-                  navigate(`/main/movies/form/${movieId}/videos`);
-                }}
+                className={activeTab === 'videos' ? 'active' : ''}
+                onClick={() => setActiveTab('videos')}
               >
                 Videos
               </li>
               <li
-                onClick={() => {
-                  navigate(`/main/movies/form/${movieId}/photos`);
-                }}
+                className={activeTab === 'photos' ? 'active' : ''}
+                onClick={() => setActiveTab('photos')}
               >
                 Photos
               </li>
             </ul>
           </nav>
-          <Outlet />
+          {/* Conditional Rendering for Tabs */}
+          {activeTab === 'cast' && <CastandCrew />}
+          {activeTab === 'videos' && <Videos />}
+          {activeTab === 'photos' && <Photos />}
         </div>
       )}
     </div>
