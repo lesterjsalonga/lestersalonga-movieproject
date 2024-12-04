@@ -39,15 +39,16 @@ body {
   display: flex;
   flex-direction: row;
   gap: 20px;
-  overflow-x: auto;
+  overflow-x: auto; 
   padding: 10px 0;
-  height: 400px;
-  scrollbar-width: thin;
-  -ms-overflow-style: none;
+  max-height: 450px; 
+  width: 100%; 
+  scrollbar-width: thin; 
+  -ms-overflow-style: none; 
 }
 
 .card-display-cast::-webkit-scrollbar {
-  height: 8px;
+  height: 8px; 
 }
 
 .card-display-cast::-webkit-scrollbar-thumb {

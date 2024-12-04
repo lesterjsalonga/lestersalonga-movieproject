@@ -9,27 +9,38 @@ function Videos() {
   const { auth } = useContext(AuthContext);
   const { movieId } = useParams();
   const [videos, setVideos] = useState([]);
-  const [newVideo, setNewVideo] = useState({ url: '', description: '' });
+  const [newVideo, setNewVideo] = useState({
+    url: '',
+    description: '',
+    site: 'YouTube',
+    videoKey: '',
+    videoType: 'Trailer',
+    official: false
+  });
   const [editingVideo, setEditingVideo] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [importMessage, setImportMessage] = useState('');
+  const [tmdbMovieId, setTmdbMovieId] = useState(null);
 
   const getYouTubeVideoId = (url) => {
-    if (!url || typeof url !== 'string' || url.trim() === '') {
-      console.error("URL is undefined, empty, or not a valid string:", url);
-      return null;
-    }
-
+    if (!url) return null;
     const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/]+\/\S+\/|(?:v|e(?:mbed)?)\/))?(?:watch\?v=|e(?:mbed)\/)([\w-]{11})|(?:youtu\.be\/)([\w-]{11})/;
     const match = url.match(regex);
-
-    if (match) {
-      return match[1] || match[2];
-    }
-
-    return null;
+    return match ? (match[1] || match[2]) : null;
   };
 
   useEffect(() => {
+    const fetchMovieDetails = async () => {
+      try {
+        const response = await axios.get(`/movies/${movieId}`, {
+          headers: { Authorization: `Bearer ${auth.accessToken}` },
+        });
+        setTmdbMovieId(response.data.tmdbId);
+      } catch (error) {
+        console.error("Error fetching movie details:", error);
+      }
+    };
+
     const fetchVideos = async () => {
       try {
         const response = await axios.get(`/movies/${movieId}/videos`, {
@@ -48,15 +59,89 @@ function Videos() {
       }
     };
 
+    fetchMovieDetails();
     fetchVideos();
   }, [movieId, auth.accessToken]);
 
+  const importVideosFromTMDB = async () => {
+    if (!tmdbMovieId) {
+      setImportMessage('TMDB Movie ID not found');
+      setTimeout(() => setImportMessage(''), 3000);
+      return;
+    }
+
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `https://api.themoviedb.org/3/movie/${tmdbMovieId}/videos?language=en-US`,
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MGY0ZjFlMmNhODQ1ZjA3NWY5MmI5ZDRlMGY3ZTEwYiIsIm5iZiI6MTcyOTkyNjY3NC40NzIwOTksInN1YiI6IjY3MTM3ODRmNjUwMjQ4YjlkYjYxZTgxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RRJNLOg8pmgYoomiCWKtwkw74T3ZtAs7ZScqxo1bzWg', 
+        },
+      });
+
+      const importedVideos = response.data.results;
+
+      const importPromises = importedVideos.map(async (video) => {
+        if (video.site === 'YouTube') {
+          const videoKey = video.key;
+          const videoType = video.type || 'Trailer'; 
+          const official = video.official || false; 
+
+          const payload = {
+            userId: auth.user.userId,
+            movieId: movieId,
+            url: `https://www.youtube.com/watch?v=${videoKey}`,
+            description: video.name || 'No description',
+            site: video.site || 'YouTube',
+            videoKey: videoKey,
+            videoType: videoType,
+            official: official
+          };
+
+          try {
+            await axios.post('/videos', payload, {
+              headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+              },
+            });
+          } catch (error) {
+            console.error(`Error importing video ${video.name}:`, error);
+          }
+        }
+      });
+
+      await Promise.all(importPromises);
+
+      const updatedVideosResponse = await axios.get(`/movies/${movieId}/videos`, {
+        headers: { Authorization: `Bearer ${auth.accessToken}` },
+      });
+
+      setVideos(updatedVideosResponse.data.videos);
+
+      setImportMessage(`Successfully imported ${importedVideos.filter(v => v.site === 'YouTube').length} videos`);
+
+      setTimeout(() => {
+        setImportMessage('');
+      }, 3000);
+    } catch (error) {
+      console.error("Error importing videos:", error);
+      setImportMessage('Failed to import videos');
+      
+      setTimeout(() => {
+        setImportMessage('');
+      }, 3000);
+    }
+  };
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
+    const fieldValue = type === 'checkbox' ? checked : value;
+    
     if (editingVideo) {
-      setEditingVideo((prev) => ({ ...prev, [name]: value }));
+      setEditingVideo((prev) => ({ ...prev, [name]: fieldValue }));
     } else {
-      setNewVideo((prev) => ({ ...prev, [name]: value }));
+      setNewVideo((prev) => ({ ...prev, [name]: fieldValue }));
     }
   };
 
@@ -65,8 +150,6 @@ function Videos() {
       alert("Please provide both a URL and a description for the video.");
       return;
     }
-
-    console.log("URL to be processed:", newVideo.url);
 
     const videoId = getYouTubeVideoId(newVideo.url);
 
@@ -82,19 +165,30 @@ function Videos() {
         url: newVideo.url,
         description: newVideo.description,
         userId: auth.user.userId,
+        site: 'YouTube',
+        videoKey: videoId,
+        videoType: newVideo.videoType || 'Trailer',
+        official: newVideo.official || false
       };
 
       const response = await axios.post('/videos', videoData, {
         headers: { Authorization: `Bearer ${auth.accessToken}` },
       });
 
-      setVideos((prevVideos) => [...prevVideos, response.data]);
+      setVideos((prevVideos) => [...prevVideos, {
+        ...response.data,
+        url: videoData.url,
+        videoKey: videoData.videoKey,
+        description: videoData.description,
+        site: videoData.site,
+        videoType: videoData.videoType,
+        official: videoData.official,
+        dateCreated: new Date().toISOString()
+      }]);
 
-      setNewVideo({ url: '', description: '' });
+      setNewVideo({ url: '', description: '', site: 'YouTube', videoKey: '', videoType: 'Trailer', official: false });
 
       alert("Video added successfully!");
-
-      window.location.reload();
     } catch (error) {
       console.error("Error adding video:", error);
       alert("Failed to add video.");
@@ -142,10 +236,12 @@ function Videos() {
           url: editingVideo.url,
           description: editingVideo.description,
           movieId: editingVideo.movieId,
+          site: editingVideo.site || 'YouTube',
+          videoKey: getYouTubeVideoId(editingVideo.url) || editingVideo.videoKey,
+          videoType: editingVideo.videoType || 'Trailer',
+          official: editingVideo.official || false
         };
   
-        console.log("Updated video data:", updatedData);
-
         try {
           const response = await axios({
             method: 'patch',
@@ -167,13 +263,7 @@ function Videos() {
   
           setEditingVideo(null);
         } catch (error) {
-          if (error.response) {
-            alert(`Error updating video: ${error.response.data.message || 'Unknown error'}`);
-          } else if (error.request) {
-            alert("No response received from the server. Please try again later.");
-          } else {
-            alert("An unexpected error occurred. Please try again.");
-          }
+          alert(`Error updating video: ${error.message}`);
         }
       }
     }
@@ -181,6 +271,12 @@ function Videos() {
 
   return (
     <div className="video-box">
+      {importMessage && (
+        <div className="import-message">
+          {importMessage}
+        </div>
+      )}
+
       <div className="Video-View-Box">
         <h2>Videos for Movie</h2>
 
@@ -189,7 +285,7 @@ function Videos() {
             <p>No videos found for this movie.</p>
           ) : (
             videos.map((video) => {
-              const videoId = getYouTubeVideoId(video.url);
+              const videoId = getYouTubeVideoId(video.url) || video.videoKey;
               return (
                 <div key={video.id} className="card-video">
                   {videoId ? (
@@ -207,7 +303,10 @@ function Videos() {
                   )}
                   <div className="container-video">
                     <h4>{video.description}</h4>
-                    <p>Added on: {new Date(video.dateCreated).toLocaleDateString()}</p>
+                    <p>Added on: {video.dateCreated ? new Date(video.dateCreated).toLocaleDateString() : 'Unknown'}</p>
+                    <p>Site: {video.site || 'YouTube'}</p>
+                    <p>Type: {video.videoType || 'Trailer'}</p>
+                    <p>Official: {video.official ? 'Yes' : 'No'}</p>
                     <div className="buttons-group">
                       <button className="edit-button" onClick={() => setEditingVideo(video)}>
                         Edit
@@ -221,6 +320,18 @@ function Videos() {
               );
             })
           )}
+        </div>
+      </div>
+
+      <div className="Search-Box">
+        <div className="search-box-btn">
+          <button
+            className="import-button"
+            type="button"
+            onClick={importVideosFromTMDB}
+          >
+            Import from TMDB
+          </button>
         </div>
       </div>
 

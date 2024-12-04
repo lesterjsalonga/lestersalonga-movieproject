@@ -15,6 +15,8 @@ function Casts() {
   const characterNameRef = useRef();
   const urlRef = useRef();
   const { movieId } = useParams();
+  const [importMessage, setImportMessage] = useState('');
+  const [tmdbMovieId, setTmdbMovieId] = useState(null);
 
   const getAll = useCallback((movie_id) => {
     axios({
@@ -27,6 +29,7 @@ function Casts() {
     })
       .then((response) => {
         setCast(response.data.casts);
+        setTmdbMovieId(response.data.tmdbId);
       })
       .catch((error) => {
         console.error("Error fetching Casts:", error.response?.data || error.message);
@@ -70,6 +73,66 @@ function Casts() {
       console.error("Search error:", error);
     }
   }, [query])
+
+  const importCasts = async () => {
+    if (!tmdbMovieId) {
+      setImportMessage('TMDB Movie ID not found');
+      setTimeout(() => setImportMessage(''), 3000);
+      return;
+    }
+
+    try {
+      const response = await axios({
+        method: 'get',
+        url: `https://api.themoviedb.org/3/movie/${tmdbMovieId}/credits?language=en-US`,
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MGY0ZjFlMmNhODQ1ZjA3NWY5MmI5ZDRlMGY3ZTEwYiIsIm5iZiI6MTcyOTkyNjY3NC40NzIwOTksInN1YiI6IjY3MTM3ODRmNjUwMjQ4YjlkYjYxZTgxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RRJNLOg8pmgYoomiCWKtwkw74T3ZtAs7ZScqxo1bzWg'
+        },
+      });
+
+      const importedCasts = response.data.cast;
+      
+      const importPromises = importedCasts.map(async (data) => {
+        if (data.profile_path) {
+          const payload = {
+            userId: auth.user.userId,
+            movieId: movieId,
+            name: data.name,
+            characterName: data.character,
+            url: `https://image.tmdb.org/t/p/original/${data.profile_path}`,
+          };
+
+          try {
+            await axios.post('/admin/casts', payload, {
+              headers: {
+                Authorization: `Bearer ${auth.accessToken}`,
+              },
+            });
+          } catch (error) {
+            console.error(`Error importing cast member ${data.name}:`, error);
+          }
+        }
+      });
+
+      await Promise.all(importPromises);
+
+      getAll(movieId);
+      setImportMessage(`Successfully imported ${importedCasts.filter(cast => cast.profile_path).length} casts`);
+      
+      setTimeout(() => {
+        setImportMessage('');
+      }, 3000);
+
+    } catch (error) {
+      console.error("Error importing casts:", error);
+      setImportMessage('Failed to import casts');
+      
+      setTimeout(() => {
+        setImportMessage('');
+      }, 3000);
+    }
+  };
 
   const handleSave = async () => {
     if (!selectedCast || !selectedCast.name || !selectedCast.characterName) {
@@ -171,7 +234,7 @@ function Casts() {
         };
 
         try {
-          const response = await axios({
+          await axios({
             method: 'patch',
             url: `/casts/${id}`,
             data: datacast,
@@ -198,6 +261,12 @@ function Casts() {
 
   return (
     <div className="cast-box">
+      {importMessage && (
+        <div className="import-message">
+          {importMessage}
+        </div>
+      )}
+      
       <div className="Cast-View-Box">
         {cast.length > 0 ? (
           <div className="card-display-cast">
@@ -260,6 +329,13 @@ function Casts() {
               disabled={!selectedCast}
             >
               Add Cast
+            </button>
+            <button
+              className="import-button"
+              type="button"
+              onClick={importCasts}
+            >
+              Import from TMDB
             </button>
           </div>
 

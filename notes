@@ -8,3 +8,5 @@ pero pag ni-reload yung page, gumagana na.
 
 3. Yung database, sa photos yung url at description naka int yung data type kaya di ma save. Kasi yung url 
 at description ng photos ay may mga special characters. 
+
+4. May mga columns nak wala sa database. (Videos; videoKey, videoType, official text)

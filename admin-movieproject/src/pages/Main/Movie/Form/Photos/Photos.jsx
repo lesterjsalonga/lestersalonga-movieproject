@@ -11,6 +11,8 @@ function Photos() {
   const descriptionRef = useRef();
   const [photos, setPhotos] = useState([]);
   const [selectedphoto, setSelectedPhoto] = useState({});
+  const [tmdbMovieId, setTmdbMovieId] = useState(null);
+  const [importMessage, setImportMessage] = useState('');
   let { movieId } = useParams();
 
   const getAll = useCallback((movieId) => {
@@ -24,6 +26,7 @@ function Photos() {
     })
       .then((response) => {
         setPhotos(response.data.photos);
+        setTmdbMovieId(response.data.tmdbId);
       })
       .catch((error) => {
         console.error("Error fetching Photos:", error.response.data);
@@ -33,6 +36,69 @@ function Photos() {
   useEffect(() => {
     getAll(movieId);
   }, [movieId, getAll]);
+
+  const importPhotosFromTMDB = async () => {
+    if (!tmdbMovieId) {
+      setImportMessage('TMDB Movie ID not found');
+      setTimeout(() => setImportMessage(''), 3000);
+      return;
+    }
+
+    try {
+      // Fetch photos from TMDB
+      const response = await axios({
+        method: 'get',
+        url: `https://api.themoviedb.org/3/movie/${tmdbMovieId}/images`,
+        headers: {
+          Accept: 'application/json',
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MGY0ZjFlMmNhODQ1ZjA3NWY5MmI5ZDRlMGY3ZTEwYiIsIm5iZiI6MTcyOTkyNjY3NC40NzIwOTksInN1YiI6IjY3MTM3ODRmNjUwMjQ4YjlkYjYxZTgxMiIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.RRJNLOg8pmgYoomiCWKtwkw74T3ZtAs7ZScqxo1bzWg'
+        },
+      });
+
+      const importedPhotos = [
+        ...response.data.backdrops.slice(0, 5),
+        ...response.data.posters.slice(0, 5)
+      ];
+      
+      const importPromises = importedPhotos.map(async (photo) => {
+        const payload = {
+          userId: auth.user.userId,
+          movieId: movieId,
+          url: `https://image.tmdb.org/t/p/original${photo.file_path}`,
+          description: `TMDB ${photo.type || 'Image'}`,
+        };
+
+        try {
+          await axios.post('/admin/photos', payload, {
+            headers: {
+              Authorization: `Bearer ${auth.accessToken}`,
+            },
+          });
+        } catch (error) {
+          console.error(`Error importing photo:`, error);
+        }
+      });
+
+      await Promise.all(importPromises);
+
+      // Refresh photos list
+      getAll(movieId);
+
+      setImportMessage(`Successfully imported ${importedPhotos.length} photos`);
+      
+      setTimeout(() => {
+        setImportMessage('');
+      }, 3000);
+
+    } catch (error) {
+      console.error("Error importing photos:", error);
+      setImportMessage('Failed to import photos');
+      
+      setTimeout(() => {
+        setImportMessage('');
+      }, 3000);
+    }
+  };
 
   const validateField = (fieldRef, fieldName) => {
     if (!fieldRef.current.value.trim()) {
@@ -55,7 +121,7 @@ function Photos() {
     };
 
     if (!validateFields()) {
-      return; // This stops if any validation fails
+      return;
     } else {
       try {
         const dataphoto = {
@@ -64,8 +130,6 @@ function Photos() {
           url: selectedphoto.url,
           description: selectedphoto.description,
         };
-
-        console.log("Sending data to backend:", dataphoto);
 
         await axios({
           method: 'POST',
@@ -134,7 +198,7 @@ function Photos() {
     };
 
     if (!validateFields()) {
-      return; // This stops if any validation fails
+      return;
     } else {
       const isConfirm = window.confirm("Are you sure you want to update the Photo?");
       if (isConfirm) {
@@ -169,6 +233,12 @@ function Photos() {
 
   return (
     <div className='photo-box'>
+      {importMessage && (
+        <div className="import-message">
+          {importMessage}
+        </div>
+      )}
+
       <div className='Photo-View-Box'>
         {photos.length > 0 ? (
           <div className='card-display-photo'>
@@ -202,6 +272,18 @@ function Photos() {
             <h3>Photos not Found</h3>
           </div>
         )}
+      </div>
+
+      <div className='Search-Box'>
+        <div className='search-box-btn'>
+          <button
+            className='import-button'
+            type='button'
+            onClick={importPhotosFromTMDB}
+          >
+            Import from TMDB
+          </button>
+        </div>
       </div>
 
       <div className='Photo-Search-Box'>

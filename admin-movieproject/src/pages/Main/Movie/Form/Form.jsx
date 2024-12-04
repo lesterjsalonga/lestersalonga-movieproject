@@ -85,10 +85,9 @@ const Form = () => {
       return;
     }
   
-    // Ensure backdrop path is always set
     const backdropPath = selectedMovie.backdrop_path 
       ? generateImageUrl(selectedMovie.backdrop_path) 
-      : generateImageUrl(selectedMovie.poster_path); // Fallback to poster path if no backdrop
+      : generateImageUrl(selectedMovie.poster_path); 
   
     const data = {
       tmdbId: selectedMovie.id,
@@ -98,8 +97,8 @@ const Form = () => {
       releaseDate: selectedMovie.release_date,
       voteAverage: parseFloat(selectedMovie.vote_average),
       posterPath: generateImageUrl(selectedMovie.poster_path),
-      backdropPath: backdropPath, // Always include backdrop path
-      isFeatured: selectedMovie.isFeatured || false,
+      backdropPath: backdropPath, 
+      isFeatured: selectedMovie.isFeatured || false,  
     };
   
     console.log('Data to be sent:', data);
@@ -147,7 +146,8 @@ const Form = () => {
             poster_path: response.data.posterPath,
             release_date: response.data.releaseDate,
             vote_average: response.data.voteAverage,
-            backdrop_path: response.data.backdropPath || '', // Default empty string
+            backdrop_path: response.data.backdropPath || '', 
+            isFeatured: response.data.isFeatured || false, 
           });
         } catch (err) {
           setError('Error fetching movie details. Please try again later.');
@@ -265,6 +265,16 @@ const Form = () => {
             onChange={(e) => setSelectedMovie({ ...selectedMovie, vote_average: e.target.value })}
           />
 
+          {/* "Is Featured" Checkbox */}
+          <label>
+            Is Featured
+            <input
+              type="checkbox"
+              checked={selectedMovie?.isFeatured || false}
+              onChange={(e) => setSelectedMovie({ ...selectedMovie, isFeatured: e.target.checked ? 1 : 0 })}
+            />
+          </label>
+
           <button type="button" onClick={handleSave}>
             {movieId ? 'Update' : 'Save'}
           </button>
@@ -296,7 +306,6 @@ const Form = () => {
               </li>
             </ul>
           </nav>
-          {/* Conditional Rendering for Tabs */}
           {activeTab === 'cast' && <CastandCrew />}
           {activeTab === 'videos' && <Videos />}
           {activeTab === 'photos' && <Photos />}
