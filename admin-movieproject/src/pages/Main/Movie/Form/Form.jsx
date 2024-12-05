@@ -18,7 +18,7 @@ const Form = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('cast'); // Default tab is 'cast'
+  const [activeTab, setActiveTab] = useState('cast'); 
   const navigate = useNavigate();
   let { movieId } = useParams();
 

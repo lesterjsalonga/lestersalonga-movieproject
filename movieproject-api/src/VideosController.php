@@ -190,9 +190,9 @@ class VideosController
             $errors[] = "Movie ID is required.";
         }
 
-        // if ($is_new && empty($data["url"])) {
-        //     $errors[] = "Video URL is required.";
-        // }
+        if ($is_new && empty($data["url"])) {
+            $errors[] = "Video URL is required.";
+        }
 
         return $errors;
     }

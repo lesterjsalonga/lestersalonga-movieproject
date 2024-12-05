@@ -45,7 +45,6 @@ function Photos() {
     }
 
     try {
-      // Fetch photos from TMDB
       const response = await axios({
         method: 'get',
         url: `https://api.themoviedb.org/3/movie/${tmdbMovieId}/images`,
@@ -80,8 +79,6 @@ function Photos() {
       });
 
       await Promise.all(importPromises);
-
-      // Refresh photos list
       getAll(movieId);
 
       setImportMessage(`Successfully imported ${importedPhotos.length} photos`);

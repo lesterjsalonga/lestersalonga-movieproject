@@ -145,7 +145,9 @@ function Casts() {
         userId: auth.user.userId,
         movieId: movieId,
         name: selectedCast.name,
-        url: `https://image.tmdb.org/t/p/original/${selectedCast.profile_path}`,
+        url: selectedCast.profile_path
+          ? `https://image.tmdb.org/t/p/original/${selectedCast.profile_path}`
+          : selectedCast.url,
         characterName: selectedCast.characterName,
       };
       await axios({
@@ -206,7 +208,7 @@ function Casts() {
       alert("No cast selected to update.");
       return;
     }
-
+  
     const validateFields = () => {
       switch (true) {
         case !validateField(nameRef, "Name"):
@@ -219,7 +221,7 @@ function Casts() {
           return true;
       }
     };
-
+  
     if (!validateFields()) {
       return;
     } else {
@@ -228,11 +230,12 @@ function Casts() {
         const datacast = {
           id: selectedCast.id,
           userId: selectedCast.userId,
+          movieId: movieId,
           name: selectedCast.name,
           url: selectedCast.url,
           characterName: selectedCast.characterName,
         };
-
+  
         try {
           await axios({
             method: 'patch',
@@ -254,6 +257,7 @@ function Casts() {
           } else {
             alert("An unexpected error occurred. Please try again.");
           }
+          console.error(error);
         }
       }
     }

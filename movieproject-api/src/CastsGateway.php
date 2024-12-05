@@ -8,17 +8,21 @@ class CastsGateway
         $this->conn = $database->getConnection();
     }
 
-    public function getAll(): array
+    public function getAll($movieId): array
     {
-        $sql = "SELECT * FROM casts";
+        $sql = "SELECT * FROM casts WHERE movieId = :movieId";
         $res = $this->conn->prepare($sql);
-        $res->execute();
+        $res->bindValue(":movieId",$movieId, PDO::PARAM_INT);
 
-        $data = $res->fetchAll(PDO::FETCH_ASSOC);
+        $res->execute();
+        $data = [];
+
+        while ($row = $res->fetch(PDO::FETCH_ASSOC)) {
+            $data[] = $row;
+        }
 
         return $data;
     }
-
 
     public function create(array $data): string
     {

@@ -215,59 +215,56 @@ function Videos() {
 
   const handleUpdateVideo = async () => {
     const validateFields = () => {
-      if (!editingVideo.url) {
-        alert("Please provide a valid URL.");
-        return false;
-      }
-      if (!editingVideo.description) {
-        alert("Please provide a description.");
-        return false;
-      }
-      return true;
-    };
-  
-    if (!validateFields()) {
-      return;
-    } else {
-      const isConfirm = window.confirm("Are you sure you want to update the video?");
-      if (isConfirm) {
-        const updatedData = {
-          id: editingVideo.id,
-          url: editingVideo.url,
-          description: editingVideo.description,
-          movieId: editingVideo.movieId,
-          site: editingVideo.site || 'YouTube',
-          videoKey: getYouTubeVideoId(editingVideo.url) || editingVideo.videoKey,
-          videoType: editingVideo.videoType || 'Trailer',
-          official: editingVideo.official || false
-        };
-  
-        try {
-          const response = await axios({
-            method: 'patch',
-            url: `/videos/${editingVideo.id}`,
-            data: updatedData,
-            headers: {
-              Accept: 'application/json',
-              Authorization: `Bearer ${auth.accessToken}`,
-            },
-          });
-  
-          alert("Video updated successfully!");
-  
-          setVideos((prevVideos) =>
-            prevVideos.map((video) =>
-              video.id === editingVideo.id ? { ...video, ...updatedData } : video
-            )
-          );
-  
-          setEditingVideo(null);
-        } catch (error) {
-          alert(`Error updating video: ${error.message}`);
+        if (!editingVideo.url) {
+            alert("Please provide a valid URL.");
+            return false;
         }
-      }
+        if (!editingVideo.description) {
+            alert("Please provide a description.");
+            return false;
+        }
+        return true;
+    };
+
+    if (!validateFields()) {
+        return;
+    } else {
+        const isConfirm = window.confirm("Are you sure you want to update the video?");
+        if (isConfirm) {
+            const updatedData = {
+                movieId: editingVideo.movieId, 
+                url: editingVideo.url,
+                description: editingVideo.description,
+                site: editingVideo.site || 'YouTube',
+                videoKey: getYouTubeVideoId(editingVideo.url) || editingVideo.videoKey,
+                videoType: editingVideo.videoType || 'Trailer',
+                official: editingVideo.official || false
+            };
+
+            try {
+                const response = await axios.patch(`/videos/${editingVideo.id}`, updatedData, {
+                    headers: {
+                        Accept: 'application/json',
+                        Authorization: `Bearer ${auth.accessToken}`,
+                    },
+                });
+
+                alert("Video updated successfully!");
+
+                setVideos((prevVideos) =>
+                    prevVideos.map((video) =>
+                        video.id === editingVideo.id ? { ...video, ...updatedData } : video
+                    )
+                );
+
+                setEditingVideo(null);
+            } catch (error) {
+                console.error("Error updating video:", error);
+                alert(`Error updating video: ${error.response ? error.response.data.message : error.message}`);
+            }
+        }
     }
-  };
+};
 
   return (
     <div className="video-box">
