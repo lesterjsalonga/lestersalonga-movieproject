@@ -1,0 +1,200 @@
+:root {
+  --bg-dark: #0f0f0f;
+  --accent-color: #e50914;
+  --text-light: #ffffff;
+  --text-muted: #b3b3b3;
+  --card-bg: #1a1a1a;
+  --gradient-overlay: linear-gradient(
+      to bottom, 
+      rgba(15, 15, 15, 0), 
+      rgba(15, 15, 15, 0.7), 
+      rgba(15, 15, 15, 0.9)
+  );
+}
+
+.landing-containerr {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  background-color: var(--bg-dark);
+  background-image: url('./landingbg.png');  
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+}
+
+.landing-containerr::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 15, 15, 0.6);  
+  z-index: 1;
+}
+
+.landing-content {
+  text-align: center;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  z-index: 2;  
+}
+
+.page-title {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-size: 5rem;
+  color: transparent;
+  background: linear-gradient(
+    45deg, 
+    var(--accent-color) 0%, 
+    #ff4d4d 50%, 
+    #ff1493 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 40px;
+  position: relative;
+  font-weight: 900;
+  text-shadow: 0 10px 15px rgba(229, 9, 20, 0.2);
+  transition: all 0.3s ease;
+}
+
+.page-title::before {
+  content: 'CineSphere';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  color: transparent;
+  background: linear-gradient(
+    45deg, 
+    rgba(229, 9, 20, 0.1) 0%, 
+    rgba(255, 77, 77, 0.1) 50%, 
+    rgba(255, 20, 147, 0.1) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  z-index: -1;
+  transform: scale(1.03);
+  filter: blur(15px);
+}
+
+.page-title:hover {
+  transform: scale(1.05) rotate(-1deg);
+  letter-spacing: 5px;
+}
+
+.page-title::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 4px;
+  background: linear-gradient(
+    to right, 
+    transparent, 
+    var(--accent-color), 
+    transparent
+  );
+}
+
+.typing-animation {
+  margin-top: 15px;
+  font-size: 1.4rem;
+  color: var(--text-light);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  letter-spacing: -0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.typed-text {
+  color: var(--accent-color);
+  font-weight: 700;
+  font-size: 2.5rem;
+  margin-left: 10px;
+}
+
+.cursor {
+  animation: blink 0.7s infinite;
+  font-weight: bold;
+  color: #dbdbdb;
+}
+
+@keyframes blink {
+  0%, 100% { 
+    opacity: 1; 
+    text-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
+  }
+  50% { 
+    opacity: 0; 
+    text-shadow: none;
+  }
+}
+
+.landing-description {
+  color: var(--text-light);
+  font-size: 1.2rem;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.explore-button {
+  background-color: var(--accent-color);
+  color: var(--text-light);
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.explore-button:hover {
+  background-color: #ff1721;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 3rem;
+  }
+
+  .typing-animation {
+    font-size: 1.2rem;
+  }
+
+  .typed-text {
+    font-size: 2rem;
+  }
+
+  .landing-description {
+    font-size: 1rem;
+    padding: 0 20px;
+  }
+
+  .explore-button {
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+}

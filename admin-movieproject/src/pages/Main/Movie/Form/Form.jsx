@@ -20,6 +20,7 @@ const Form = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('cast'); 
   const navigate = useNavigate();
+  const [isMovieSelected, setIsMovieSelected] = useState(false);
   let { movieId } = useParams();
 
   const API_BASE_URL = 'https://api.themoviedb.org/3';
@@ -36,6 +37,7 @@ const Form = () => {
   const handleSearch = useCallback(async (page = 1) => {
     setIsLoading(true);
     setError(null);
+    setIsMovieSelected(false);
     try {
       const response = await axios.get(
         `${API_BASE_URL}/search/movie?query=${query}&include_adult=false&language=en-US&page=${page}`,
@@ -61,6 +63,7 @@ const Form = () => {
 
   const handleSelectMovie = (movie) => {
     setSelectedMovie(movie);
+    setIsMovieSelected(true);
   };
 
   const handleSave = async () => {
@@ -162,36 +165,45 @@ const Form = () => {
   return (
     <div className="moviecontainer mt-5 overflow-auto movieform-container">
       <h1>{movieId ? 'Edit Movie' : 'Create Movie'}</h1>
-
+  
       {error && <p className="text-danger text-center">{error}</p>}
-
+  
       {!movieId && (
         <>
           <div className="search-container">
-            <label>Search Movie:</label>
+          <label>Search Movie:</label>
+          <div className="search-input-container">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Enter movie title"
+              className="search-input"
             />
-            <button onClick={() => handleSearch(1)}>Search</button>
+            <button onClick={() => handleSearch(1)} className="search-button">Search</button>
           </div>
+        </div>
 
-          <div className="searched-movie">
-            {isLoading ? (
-              <p>Loading...</p>
-            ) : notFound ? (
-              <p>No movies found.</p>
-            ) : (
-              searchedMovieList.map((movie) => (
-                <p key={movie.id} onClick={() => handleSelectMovie(movie)}>
-                  {movie.title}
-                </p>
-              ))
-            )}
-          </div>
-
+        <div className="searched-movie">
+          {!isMovieSelected && ( 
+            <>
+              {isLoading ? (
+                <p className="loading-text">Loading...</p>
+              ) : notFound ? (
+                <p className="not-found-text">No movies found.</p>
+              ) : (
+                <ul className="movie-list">
+                  {searchedMovieList.map((movie) => (
+                    <li key={movie.id} className="movie-item" onClick={() => handleSelectMovie(movie)}>
+                      {movie.title}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+        </div>
+          
           {totalPages > 1 && (
             <div className="pagination">
               <button
@@ -219,9 +231,9 @@ const Form = () => {
           )}
         </>
       )}
-
+  
       <div className="movie-details">
-        <form>
+        <div className="movie-poster-section">
           {selectedMovie?.poster_path && (
             <img
               src={generateImageUrl(selectedMovie.poster_path)}
@@ -229,87 +241,106 @@ const Form = () => {
               className="poster-image"
             />
           )}
-
-          <label>Title</label>
-          <input
-            type="text"
-            value={selectedMovie?.title || ''}
-            onChange={(e) => setSelectedMovie({ ...selectedMovie, title: e.target.value })}
-          />
-
-          <label>Overview</label>
-          <textarea
-            rows="5"
-            value={selectedMovie?.overview || ''}
-            onChange={(e) => setSelectedMovie({ ...selectedMovie, overview: e.target.value })}
-          ></textarea>
-
-          <label>Popularity</label>
-          <input
-            type="number"
-            value={selectedMovie?.popularity || ''}
-            onChange={(e) => setSelectedMovie({ ...selectedMovie, popularity: e.target.value })}
-          />
-
-          <label>Release Date</label>
-          <input
-            type="date"
-            value={selectedMovie?.release_date || ''}
-            onChange={(e) => setSelectedMovie({ ...selectedMovie, release_date: e.target.value })}
-          />
-
-          <label>Vote Average</label>
-          <input
-            type="number"
-            value={selectedMovie?.vote_average || ''}
-            onChange={(e) => setSelectedMovie({ ...selectedMovie, vote_average: e.target.value })}
-          />
-
-          {/* "Is Featured" Checkbox */}
-          <label>
-            Is Featured
-            <input
-              type="checkbox"
-              checked={selectedMovie?.isFeatured || false}
-              onChange={(e) => setSelectedMovie({ ...selectedMovie, isFeatured: e.target.checked ? 1 : 0 })}
-            />
-          </label>
-
-          <button type="button" onClick={handleSave}>
-            {movieId ? 'Update' : 'Save'}
-          </button>
-        </form>
+        </div>
+  
+        <div className="movie-form-section">
+          <form>
+            <div>
+              <label>Title</label>
+              <input
+                type="text"
+                value={selectedMovie?.title || ''}
+                onChange={(e) => setSelectedMovie({ ...selectedMovie, title: e.target.value })}
+              />
+            </div>
+  
+            <div>
+              <label>Popularity</label>
+              <input
+                type="number"
+                value={selectedMovie?.popularity || ''}
+                onChange={(e) => setSelectedMovie({ ...selectedMovie, popularity: e.target.value })}
+              />
+            </div>
+  
+            <div>
+              <label>Release Date</label>
+              <input
+                type="date"
+                value={selectedMovie?.release_date || ''}
+                onChange={(e) => setSelectedMovie({ ...selectedMovie, release_date: e.target.value })}
+              />
+            </div>
+  
+            <div>
+              <label>Vote Average</label>
+              <input
+                type="number"
+                value={selectedMovie?.vote_average || ''}
+                onChange={(e) => setSelectedMovie({ ...selectedMovie, vote_average: e.target.value })}
+              />
+            </div>
+  
+            <div className="is-featured-container">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={selectedMovie?.isFeatured || false}
+                onChange={(e) => setSelectedMovie({ ...selectedMovie, isFeatured: e.target.checked ? 1 : 0 })}
+                className="checkbox-input"
+              />
+              <span className="checkbox-custom"></span>
+              Is Featured
+            </label>
+          </div>
+  
+            <div style={{ gridColumn: 'span 2' }}>
+              <label>Overview</label>
+              <textarea
+                rows="5"
+                value={selectedMovie?.overview || ''}
+                onChange={(e) => setSelectedMovie({ ...selectedMovie, overview: e.target.value })}
+              ></textarea>
+            </div>
+  
+            <div className="save-button-container">
+              <button type="button" className="save-button" onClick={handleSave}>
+                {movieId ? 'Update' : 'Save'}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
-
+  
       {movieId && selectedMovie && (
         <div>
-          <hr />
-          <nav>
-            <ul className="tabs">
-              <li
-                className={activeTab === 'cast' ? 'active' : ''}
-                onClick={() => setActiveTab('cast')}
-              >
-                Cast & Crew
-              </li>
-              <li
-                className={activeTab === 'videos' ? 'active' : ''}
-                onClick={() => setActiveTab('videos')}
-              >
-                Videos
-              </li>
-              <li
-                className={activeTab === 'photos' ? 'active' : ''}
-                onClick={() => setActiveTab('photos')}
-              >
-                Photos
-              </li>
-            </ul>
-          </nav>
-          {activeTab === 'cast' && <CastandCrew />}
-          {activeTab === 'videos' && <Videos />}
-          {activeTab === 'photos' && <Photos />}
-        </div>
+        <hr />
+        <nav>
+          <ul className="tabs">
+            <li
+              className={activeTab === 'cast' ? 'active' : ''}
+              onClick={() => setActiveTab('cast')}
+            >
+              Cast & Crew
+            </li>
+            <li
+              className={activeTab === 'videos' ? 'active' : ''}
+              onClick={() => setActiveTab('videos')}
+            >
+              Videos
+            </li>
+            <li
+              className={activeTab === 'photos' ? 'active' : ''}
+              onClick={() => setActiveTab('photos')}
+            >
+              Photos
+            </li>
+          </ul>
+        </nav>
+        {activeTab === 'cast' && <CastandCrew />}
+        {activeTab === 'videos' && <Videos />}
+        {activeTab === 'photos' && <Photos />}
+      </div>
       )}
     </div>
   );

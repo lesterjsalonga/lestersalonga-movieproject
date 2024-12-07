@@ -235,7 +235,7 @@ function Photos() {
           {importMessage}
         </div>
       )}
-
+  
       <div className='Photo-View-Box'>
         {photos.length > 0 ? (
           <div className='card-display-photo'>
@@ -270,21 +270,19 @@ function Photos() {
           </div>
         )}
       </div>
-
-      <div className='Search-Box'>
-        <div className='search-box-btn'>
-          <button
-            className='import-button'
-            type='button'
-            onClick={importPhotosFromTMDB}
-          >
-            Import from TMDB
-          </button>
-        </div>
-      </div>
-
+  
       <div className='Photo-Search-Box'>
         <div className='parent-container'>
+          <div className='search-box-btn'>
+            <button
+              className='import-button'
+              type='button'
+              onClick={importPhotosFromTMDB}
+            >
+              Import from TMDB
+            </button>
+          </div>
+  
           <div className='photo-detail-box'>
             <div className='photo-container-center'>
               <div className='photo-image-container'>
@@ -299,7 +297,7 @@ function Photos() {
               </div>
             </div>
           </div>
-
+  
           <div className='photo-info-text'>
             <div className='input-group'>
               <label className='label-photo'>Url Image:</label>
@@ -310,7 +308,7 @@ function Photos() {
                 ref={urlRef}
               />
             </div>
-
+  
             <div className='input-group'>
               <label className='label-photo'>Description:</label>
               <textarea
@@ -321,7 +319,7 @@ function Photos() {
               />
             </div>
           </div>
-
+  
           <div className='save-edit-back-btn'>
             {!photoid ? (
               <button className='edit-save-btn' type='button' onClick={handlesave}>
@@ -332,7 +330,7 @@ function Photos() {
                 Update
               </button>
             )}
-
+  
             <button className='clear-btn' type='button' onClick={handleclear}>
               Clear
             </button>

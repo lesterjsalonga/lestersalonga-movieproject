@@ -274,31 +274,31 @@ function Casts() {
       <div className="Cast-View-Box">
         {cast.length > 0 ? (
           <div className="card-display-cast">
-            {cast.map((actor) => (
-              <div key={actor.id} className="card">
-                <div className="buttons-group">
-                  <button
-                    type="button"
-                    className="delete-button"
-                    onClick={() => handleDelete(actor.id)}
-                  >
-                    Delete
-                  </button>
-                  <button
-                    type="button"
-                    className="edit-button"
-                    onClick={() => setSelectedCast(actor)}
-                  >
-                    Edit
-                  </button>
-                </div>
-                <img src={actor.url} alt={actor.name} className="image-casts" />
-                <div className="container">
-                  <h4>{actor.name}</h4>
-                  <p>{actor.characterName}</p>
-                </div>
+           {cast.map((actor) => (
+            <div key={actor.id} className="card">
+              <div className="buttons-group">
+                <button
+                  type="button"
+                  className="delete-button"
+                  onClick={() => handleDelete(actor.id)}
+                >
+                  Delete
+                </button>
+                <button
+                  type="button"
+                  className="edit-button"
+                  onClick={() => setSelectedCast(actor)}
+                >
+                  Edit
+                </button>
               </div>
-            ))}
+              <img src={actor.url} alt={actor.name} className="image-casts" />
+              <div className="container">
+                <h4>{actor.name}</h4>
+                <p>{actor.characterName}</p>
+              </div>
+            </div>
+          ))}
           </div>
         ) : (
           <div className="no-cast">

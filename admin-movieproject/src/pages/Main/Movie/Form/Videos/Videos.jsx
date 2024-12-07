@@ -266,70 +266,69 @@ function Videos() {
     }
 };
 
-  return (
-    <div className="video-box">
-      {importMessage && (
-        <div className="import-message">
-          {importMessage}
-        </div>
-      )}
+return (
+  <div className="video-box">
+    {importMessage && (
+      <div className="import-message">
+        {importMessage}
+      </div>
+    )}
 
-      <div className="Video-View-Box">
-        <h2>Videos for Movie</h2>
+    <div className="Video-View-Box">
+      <h2>Videos for Movie</h2>
 
-        <div className="card-display-videos">
-          {videos.length === 0 ? (
-            <p>No videos found for this movie.</p>
-          ) : (
-            videos.map((video) => {
-              const videoId = getYouTubeVideoId(video.url) || video.videoKey;
-              return (
-                <div key={video.id} className="card-video">
-                  {videoId ? (
-                    <iframe
-                      width="100%"
-                      height="315"
-                      src={`https://www.youtube.com/embed/${videoId}`}
-                      title="Video"
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    ></iframe>
-                  ) : (
-                    <p>Invalid video URL</p>
-                  )}
-                  <div className="container-video">
-                    <h4>{video.description}</h4>
-                    <p>Added on: {video.dateCreated ? new Date(video.dateCreated).toLocaleDateString() : 'Unknown'}</p>
-                    <p>Site: {video.site || 'YouTube'}</p>
-                    <p>Type: {video.videoType || 'Trailer'}</p>
-                    <p>Official: {video.official ? 'Yes' : 'No'}</p>
-                    <div className="buttons-group">
-                      <button className="edit-button" onClick={() => setEditingVideo(video)}>
-                        Edit
-                      </button>
-                      <button className="delete-button" onClick={() => handleDeleteVideo(video.id)}>
-                        Delete
-                      </button>
-                    </div>
+      <div className="card-display-videos">
+        {videos.length === 0 ? (
+          <p>No videos found for this movie.</p>
+        ) : (
+          videos.map((video) => {
+            const videoId = getYouTubeVideoId(video.url) || video.videoKey;
+            return (
+              <div key={video.id} className="card-video">
+                {videoId ? (
+                  <iframe
+                    width="100%"
+                    height="315"
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    title="Video"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : (
+                  <p>Invalid video URL</p>
+                )}
+                <div className="container-video">
+                  <h4>{video.description}</h4>
+                  <p>Added on: {video.dateCreated ? new Date(video.dateCreated).toLocaleDateString() : 'Unknown'}</p>
+                  <p>Site: {video.site || 'YouTube'}</p>
+                  <p>Type: {video.videoType || 'Trailer'}</p>
+                  <p>Official: {video.official ? 'Yes' : 'No'}</p>
+                  <div className="buttons-group">
+                    <button className="edit-button" onClick={() => setEditingVideo(video)}>
+                      Edit
+                    </button>
+                    <button className="delete-button" onClick={() => handleDeleteVideo(video.id)}>
+                      Delete
+                    </button>
                   </div>
                 </div>
-              );
-            })
-          )}
-        </div>
+              </div>
+            );
+          })
+        )}
       </div>
+    </div>
 
-      <div className="Search-Box">
-        <div className="search-box-btn">
-          <button
-            className="import-button"
-            type="button"
-            onClick={importVideosFromTMDB}
-          >
-            Import from TMDB
-          </button>
-        </div>
+    <div className="Video-Search-Box">
+      <div className="search-box-btn">
+        <button
+          className="import-button"
+          type="button"
+          onClick={importVideosFromTMDB}
+        >
+          Import from TMDB
+        </button>
       </div>
 
       <VideosForm
@@ -340,7 +339,8 @@ function Videos() {
         editingVideo={editingVideo}
       />
     </div>
-  );
+  </div>
+);
 }
 
 export default Videos;

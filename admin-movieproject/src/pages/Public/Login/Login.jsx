@@ -3,10 +3,10 @@ import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import { useDebounce } from '../../../utils/hooks/useDebounce';
 import axios from 'axios';
-import { AuthContext } from '../../../utils/context/AuthToken'; // Assuming you have AuthContext here
+import { AuthContext } from '../../../utils/context/AuthToken'; 
 
 function Login() {
-  const { setAuthData } = useContext(AuthContext); // Accessing the setAuthData function from the AuthContext
+  const { setAuthData } = useContext(AuthContext); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isFieldsDirty, setIsFieldsDirty] = useState(false);
@@ -16,8 +16,38 @@ function Login() {
   const userInputDebounce = useDebounce({ email, password }, 2000);
   const [debounceState, setDebounceState] = useState(false);
   const [status, setStatus] = useState('idle');
-  const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
+  const [errorMessage, setErrorMessage] = useState(''); 
   const navigate = useNavigate();
+  const [typedText, setTypedText] = useState('');
+  const words = ['Movie', 'Series', 'TV Show', 'Anime'];
+  const [wordIndex, setWordIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const handleTyping = () => {
+      const currentWord = words[wordIndex];
+      setTypedText(prev => 
+        isDeleting 
+          ? prev.slice(0, -1) 
+          : currentWord.slice(0, prev.length + 1)
+      );
+
+      if (!isDeleting && typedText === currentWord) {
+        setTimeout(() => setIsDeleting(true), 2000);
+      }
+
+      if (isDeleting && typedText === '') {
+        setIsDeleting(false);
+        setWordIndex((prev) => (prev + 1) % words.length);
+      }
+    };
+
+    const typingSpeed = isDeleting ? 50 : 100;
+    const timer = setTimeout(handleTyping, typingSpeed);
+
+    return () => clearTimeout(timer);
+  }, [typedText, isDeleting, wordIndex]);
+
 
   const handleShowPassword = useCallback(() => {
     setIsShowPassword((value) => !value);
@@ -39,7 +69,6 @@ function Login() {
     }
   };
 
-  // Determine API endpoint dynamically
   const getApiEndpoint = () => {
     if (window.location.pathname.includes('/admin')) {
       return '/admin/login';
@@ -47,39 +76,35 @@ function Login() {
     return '/user/login';
   };
 
-  // Handle the login process
   const handleLogin = async () => {
     const data = { email, password };
     setStatus('loading');
-    setErrorMessage(''); // Clear previous error message
+    setErrorMessage(''); 
 
     try {
-      const apiEndpoint = getApiEndpoint(); // Determine the API endpoint based on the current path
+      const apiEndpoint = getApiEndpoint(); 
       const res = await axios.post(apiEndpoint, data, {
         headers: { 'Access-Control-Allow-Origin': '*' },
       });
 
       console.log(res);
 
-      // Check if the user is admin
       if (res.data.user.role !== 'admin') {
         setStatus('idle');
         setErrorMessage('Only admin users can log in.');
-        return; // Prevent further actions for non-admin users
+        return; 
       }
 
-      // Store authentication token and user data
       localStorage.setItem('accessToken', res.data.access_token);
       localStorage.setItem('user', JSON.stringify(res.data.user));
 
-      // Set the auth data in context
       setAuthData({
         accessToken: res.data.access_token,
         user: res.data.user,
       });
 
       setStatus('idle');
-      navigate('/main/movies'); // Redirect to admin dashboard
+      navigate('/main/movies'); 
     } catch (e) {
       console.log(e);
       setStatus('idle');
@@ -93,48 +118,54 @@ function Login() {
 
   return (
     <div className='Login'>
-      <div className='main-container'>
-        <h3>Login</h3>
-        <form>
-          <div className='form-container'>
-            <div>
-              <div className='form-group'>
-                <label>E-mail:</label>
-                <input
-                  type='text'
-                  name='email'
-                  ref={emailRef}
-                  onChange={(e) => handleOnChange(e, 'email')}
-                />
+      <div className='login-main-container'>
+        <div className='login-title-container'>
+        <div className='typing-animation'>
+                Explore Your Favorite <span className='typed-text'>{typedText}</span>
+                <span className='cursor'>|</span>
               </div>
-              {debounceState && isFieldsDirty && email === '' && (
-                <span className='errors'>This field is required</span>
+              <h1>CineSphere</h1>
+              <p>
+                The ultimate online hub for film lovers! Whether you're a casual viewer or a dedicated cinephile, CineSphere is designed to enhance your movie-watching experience by providing a rich database of films from every genre and era.
+              </p> 
+        </div>
+        <form>
+          <div className='login-form-container'>
+          <h3 className='login-header'>Login</h3>
+            <div className='login-form-group'>
+              <label>E-mail:</label>
+              <input
+                type='text'
+                name='email'
+                ref={emailRef}
+                value={email}
+                onChange={(e) => handleOnChange(e, 'email')}
+              />
+              {isFieldsDirty && email === '' && (
+                <span className='login-errors'>This field is required</span>
               )}
             </div>
-            <div>
-              <div className='form-group'>
-                <label>Password:</label>
-                <input
-                  type={isShowPassword ? 'text' : 'password'}
-                  name='password'
-                  ref={passwordRef}
-                  onChange={(e) => handleOnChange(e, 'password')}
-                />
-              </div>
-              {debounceState && isFieldsDirty && password === '' && (
-                <span className='errors'>This field is required</span>
+            <div className='form-group'>
+              <label>Password:</label>
+              <input
+                type={isShowPassword ? 'text' : 'password'}
+                name='password'
+                ref={passwordRef}
+                value={password}
+                onChange={(e) => handleOnChange(e, 'password')}
+              />
+              {isFieldsDirty && password === '' && (
+                <span className='login-errors'>This field is required</span>
               )}
             </div>
             <div className='show-password' onClick={handleShowPassword}>
               {isShowPassword ? 'Hide' : 'Show'} Password
             </div>
-
             {errorMessage && (
-              <div className='error-message'>
+              <div className='login-error-message'>
                 <span>{errorMessage}</span>
               </div>
             )}
-
             <div className='submit-container'>
               <button
                 type='button'
@@ -144,13 +175,12 @@ function Login() {
                     return;
                   }
                   if (email && password) {
-                    handleLogin(); // Call handleLogin on button click
+                    handleLogin();
                   } else {
                     setIsFieldsDirty(true);
                     if (email === '') {
                       emailRef.current.focus();
                     }
-
                     if (password === '') {
                       passwordRef.current.focus();
                     }
@@ -162,7 +192,7 @@ function Login() {
             </div>
             <div className='register-container'>
               <a href='/register'>
-                <small>Register</small>
+                <small>Don't have an account? Register</small>
               </a>
             </div>
           </div>
@@ -170,6 +200,6 @@ function Login() {
       </div>
     </div>
   );
-}
+};
 
 export default Login;

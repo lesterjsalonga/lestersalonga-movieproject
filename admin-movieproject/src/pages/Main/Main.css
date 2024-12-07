@@ -37,3 +37,7 @@
 .Main .container .navigation ul li.logout {
   cursor: pointer;
 }
+
+.logout{
+  color: black;
+}

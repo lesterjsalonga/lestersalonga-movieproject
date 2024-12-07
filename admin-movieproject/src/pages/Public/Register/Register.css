@@ -1,14 +1,21 @@
-.register-container {
-    max-width: 450px;
-    margin: auto;
-    padding: 40px;
-    border: 1px solid #e0e0e0;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-    transition: all 0.3s ease-in-out;
+.Register {
+  background-image: url('./imgbg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; 
+  min-height: 100vh; 
 }
 
+.register-container {
+  max-width: 450px;
+  margin: auto;
+  padding: 40px;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: all 0.3s ease-in-out;
+}
 
 h2 {
     text-align: center;
@@ -17,7 +24,6 @@ h2 {
     margin-bottom: 20px;
     font-weight: 600;
 }
-
 
 .input-field {
     width: 100%;
@@ -29,22 +35,19 @@ h2 {
     transition: all 0.3s ease;
 }
 
-
 .input-field:focus {
     border-color: #007BFF;
     outline: none;
     box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
 }
 
-
 label {
     font-size: 14px;
-    color: #555;
+    color: #ffffff;
     font-weight: 500;
     display: block;
     margin-bottom: 5px;
 }
-
 
 .show-password {
     font-size: 14px;
@@ -53,7 +56,6 @@ label {
     cursor: pointer;
     margin-top: 5px;
 }
-
 
 .register-button {
     width: 100%;
@@ -68,11 +70,9 @@ label {
     transition: background 0.3s ease;
 }
 
-
 .register-button:hover {
     background: linear-gradient(135deg, #0056b3, #004080);
 }
-
 
 .login-container {
     text-align: center;
@@ -101,4 +101,158 @@ label {
     .register-button {
         font-size: 16px;
     }
+}
+
+.form-container {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-left: 300px;
+  margin-right: 150px;
+  margin-top: 50px;
+  width: 455px;
+  height: 700px;
+  padding: 20px;
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.form-group {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.form-container h3 {
+  grid-column: span 2;
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.error-message {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: red;
+  font-size: 14px;
+  display: none;
+}
+
+.error-message.show {
+  display: block;
+}
+
+.submit-container button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #cc0624, #e30d0d);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.submit-container button:hover {
+  background: linear-gradient(135deg, #0056b3, #004080);
+}
+
+.login-container {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-container a {
+  color: #007BFF;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.login-container a:hover {
+  text-decoration: underline;
+}
+
+.title-container {
+  width: 50%;
+  padding: 30px;
+  margin-left: 100px;
+  margin-top: 150px;
+  background: rgba(37, 3, 27, 0.7);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.title-container h1 {
+  font-family: 'Inter', sans-serif;
+  font-size: 4rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin-bottom: 20px;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+}
+
+.title-container p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.3rem;
+  line-height: 1.7;
+  color: #f0f0f0;
+  max-width: 700px;
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
+.main-container {
+  display: flex;
+  align-items: flex-start;
+}
+
+.typing-animation {
+  margin-top: 15px;
+  font-size: 1.4rem;
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  letter-spacing: -0.5px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.typed-text {
+  color: #ff16ff;
+  font-weight: 700;
+  font-size: 3.5rem;
+}
+
+.cursor {
+  animation: blink 0.7s infinite;
+  font-weight: bold;
+  color: #dbdbdb;
+}
+
+@keyframes blink {
+  0%, 100% { 
+    opacity: 1; 
+    text-shadow: 0 0 5px rgba(29, 117, 232, 0.5);
+  }
+  50% { 
+    opacity: 0; 
+    text-shadow: none;
+  }
 }

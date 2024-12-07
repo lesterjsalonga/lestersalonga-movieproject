@@ -1,10 +1,11 @@
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #a1c4fd, #c2e9fb);
+  font-family: 'Inter', Arial, sans-serif;
+  background: linear-gradient(-45deg, #313866, #50409A, #964EC2, #FF7BBF);
   background-size: 400% 400%;
   animation: gradientBG 15s ease infinite;
   min-height: 100vh;
+  color: #333;
 }
 
 @keyframes gradientBG {
@@ -20,148 +21,175 @@ body {
 }
 
 .lists-container {
-  width: 100%;
+  width: 95%;
+  max-width: 1400px;
   display: flex;
   flex-direction: column;
-  padding: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.9); 
-  border-radius: 15px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+  background-color: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   margin: 2rem auto;
-  max-width: 1200px;
+  position: relative;
   overflow: hidden;
+  height: 90%;
+  margin-top: 5px;
 }
 
 .create-container {
   display: flex;
-  gap: 1rem;
+  justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #313866;
+}
+
+.button-list, .button-delete, .button-edit {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .button-list {
-  background-color: #007bff;
-  color: #fff;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s ease-in-out;
+  background-color: #50409A;
+  color: white;
 }
 
 .button-list:hover {
-  background-color: #0056b3;
+  background-color: #313866;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .button-delete {
-  background-color: #dc3545;
+  background-color: #FF7BBF;
   color: white;
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: all 0.3s ease-in-out;
 }
 
 .button-delete:hover {
-  background-color: #b3242e;
+  background-color: #964EC2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .button-edit {
-  background-color: #ffc107;
-  color: black;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 0.5rem;
-  font-size: 0.9rem;
-  transition: all 0.3s ease-in-out;
+  background-color: #964EC2;
+  color: white;
 }
 
 .button-edit:hover {
-  background-color: #e0a800;
+  background-color: #50409A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .table-container {
-  overflow-x: auto;
-  border: 1px solid #dee2e6;
-  border-radius: 15px;
-  background-color: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-height: 600px;
+  overflow-y: auto;
+  border-radius: 12px;
+  border: 1px solid #50409A;
 }
 
 .movie-lists {
   width: 100%;
-  border-collapse: collapse;
-  text-align: center;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .movie-lists thead {
-  background-color: #343a40;
-  color: #fff;
-  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  background-color: #313866;
+  color: white;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.movie-lists th,
+.movie-lists th {
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  border-bottom: 2px solid #964EC2;
+}
+
 .movie-lists td {
   padding: 1rem;
-  border: 1px solid #dee2e6;
-  font-size: 0.95rem;
+  text-align: center;
+  border-bottom: 1px solid #964EC2;
+  transition: background-color 0.3s ease;
+  vertical-align: middle;
 }
 
 .movie-lists tbody tr:nth-child(odd) {
-  background-color: #f8f9fa;
+  background-color: rgba(80, 64, 154, 0.1);
 }
 
 .movie-lists tbody tr:nth-child(even) {
-  background-color: #e9ecef;
+  background-color: rgba(150, 78, 194, 0.1);
 }
 
 .movie-lists tbody tr:hover {
-  background-color: #dfe4ea;
-  transition: background-color 0.3s ease;
+  background-color: rgba(255, 123, 191, 0.2);
 }
 
 .movie-poster {
-  width: 50px;
-  height: 75px;
+  width: 60px;
+  height: 90px;
   object-fit: cover;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  border: 2px solid #313866;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
 }
 
 .movie-poster:hover {
   transform: scale(1.1);
+  z-index: 1;
+  border-color: #964EC2;
 }
 
-.movie-lists th:first-child,
-.movie-lists td:first-child {
-  text-align: center;
+/* Custom Scrollbar */
+.table-container::-webkit-scrollbar {
+  width: 10px;
 }
 
-.movie-lists th:first-child {
-  width: 5%;
-}
-
-::-webkit-scrollbar {
-  width: 12px;
-  height: 12px;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #6c757d;
+.table-container::-webkit-scrollbar-track {
+  background: #50409A;
   border-radius: 10px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background-color: #495057;
+.table-container::-webkit-scrollbar-thumb {
+  background: #FF7BBF;
+  border-radius: 10px;
 }
 
-::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
-  border-radius: 10px;
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #964EC2;
+}
+
+
+.button-container {
+  display: flex;
+  gap: 10px; 
+  align-items: center;
+}
+
+.button-edit, .button-delete {
+  padding: 10px;
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 70px;
+  height: 36px; 
 }

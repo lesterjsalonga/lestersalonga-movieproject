@@ -7,71 +7,54 @@
 body {
   font-family: 'Arial', sans-serif;
   background-color: rgb(30, 30, 30);
-  color: #000000;
+  color: #ffffff; 
 }
 
 .cast-box {
-  background-color: rgb(40, 40, 40);
+  background-color: #313866; 
   display: flex;
   flex-direction: row;
   gap: 20px;
   border-radius: 10px;
   padding: 25px;
   height: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); 
 }
 
 .Cast-View-Box {
   flex: 2;
-  background-color: rgb(50, 50, 50);
+  background-color: #50409A; 
   border-radius: 12px;
   padding: 20px;
+  height: 600px; 
   overflow-y: auto;
-  position: relative;
 }
 
 .Cast-View-Box h3 {
   text-align: center;
-  color: #000000;
+  color: #ffffff; 
   margin-bottom: 15px;
 }
 
 .card-display-cast {
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap; 
   gap: 20px;
-  overflow-x: auto; 
+  overflow-y: auto; 
   padding: 10px 0;
-  max-height: 450px; 
+  height: 100%; 
   width: 100%; 
-  scrollbar-width: thin; 
-  -ms-overflow-style: none; 
-}
-
-.card-display-cast::-webkit-scrollbar {
-  height: 8px; 
-}
-
-.card-display-cast::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 5px;
-}
-
-.card-display-cast::-webkit-scrollbar-thumb:hover {
-  background: #555;
-}
-
-.card-display-cast::-webkit-scrollbar-track {
-  background: #f1f1f1;
 }
 
 .card {
   width: 220px;
-  background-color: rgb(80, 80, 80);
+  background-color: #964EC2; 
   border-radius: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
   overflow: hidden;
   transition: all 0.3s ease-in-out;
   text-align: center;
+  height: 370px;
 }
 
 .card:hover {
@@ -87,17 +70,17 @@ body {
 }
 
 .container {
-  padding: 15px;
+  display: block; 
 }
 
 .container h4 {
-  font-size: 18px;
-  color: #000000;
+  margin: 0; 
 }
 
 .container p {
-  font-size: 15px;
-  color: #000000;
+  margin: 0; 
+  margin-top: 25px; 
+  margin-left: -75px;
 }
 
 .buttons-group {
@@ -108,8 +91,8 @@ body {
 
 .edit-button,
 .delete-button {
-  background-color: rgb(30, 30, 30);
-  color: #fff;
+  background-color: #FF7BBF; 
+  color: #ffffff; 
   padding: 8px 12px;
   font-size: 14px;
   border: none;
@@ -128,7 +111,7 @@ body {
 
 .Search-Box {
   flex: 1;
-  background-color: rgb(60, 60, 60);
+  background-color: #50409A; 
   padding: 20px;
   border-radius: 12px;
 }
@@ -145,21 +128,21 @@ body {
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: rgb(80, 80, 80);
-  color: black;
+  background-color: #313866; 
+  color: #ffffff; 
   width: 100%;
   outline: none;
 }
 
 .input-search-person:focus {
-  border-color: #000000;
+  border-color: #FF7BBF; 
 }
 
 .button-search {
   padding: 12px 15px;
   font-size: 14px;
   font-weight: bold;
-  background-color: hsl(29, 83%, 55%);
+  background-color: #964EC2;
   color: white;
   border-radius: 8px;
   border: none;
@@ -169,14 +152,14 @@ body {
 }
 
 .button-search:hover {
-  background-color: hsl(34, 90%, 60%);
+  background-color: hsl(283, 73%, 17%);
 }
 
 .save-button {
   padding: 12px 15px;
   font-size: 14px;
   font-weight: bold;
-  background-color: hsl(120, 60%, 40%);
+  background-color: #964EC2; 
   color: white;
   border-radius: 8px;
   border: none;
@@ -186,12 +169,12 @@ body {
 }
 
 .save-button:hover {
-  background-color: hsl(120, 70%, 45%);
+  background-color: hsl(283, 73%, 17%);
 }
 
 .cast-detail-box {
   margin-top: 20px;
-  background-color: rgb(50, 50, 50);
+  background-color: #50409A; 
   border-radius: 12px;
   padding: 20px;
 }
@@ -207,7 +190,7 @@ body {
   height: 220px;
   border-radius: 10px;
   overflow: hidden;
-  background-color: rgb(70, 70, 70);
+  background-color: #313866; 
   display: flex;
   justify-content: center;
   align-items: center;
@@ -238,7 +221,7 @@ label {
   text-align: right;
   font-size: 14px;
   font-weight: bold;
-  color: #000000;
+  color: #000000; 
   flex: 1;
 }
 
@@ -248,13 +231,13 @@ input {
   font-size: 14px;
   border-radius: 8px;
   border: 1px solid #ccc;
-  background-color: rgb(80, 80, 80);
-  color: black;
+  background-color: #444d4f; 
+  color: #000000; 
 }
 
 input:focus {
   outline: none;
-  border-color: #000000;
+  border-color: #FF7BBF; 
 }
 
 .edit-back-btn {
@@ -276,12 +259,13 @@ input:focus {
 }
 
 .edit-btn {
-  background-color: hsl(214, 83%, 55%);
+  background-color: #964EC2; 
   color: white;
+  margin-left: 75px;
 }
 
 .edit-btn:hover {
-  background-color: hsl(214, 90%, 60%);
+  background-color: hsl(283, 73%, 17%);
 }
 
 .back-btn {
@@ -295,11 +279,28 @@ input:focus {
 
 .no-cast {
   font-size: 18px;
-  color: #000000;
+  color: #ffffff;
   text-align: center;
   margin-top: 20px;
 }
 
 td {
-  color: #000000;
+  color: #000000; 
+}
+
+.import-button {
+  padding: 12px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: #964EC2;
+  color: white;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%; 
+}
+
+.import-button:hover {
+  background-color: hsl(283, 73%, 17%); 
 }

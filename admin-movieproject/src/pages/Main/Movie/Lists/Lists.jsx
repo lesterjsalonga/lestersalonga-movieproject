@@ -9,7 +9,6 @@ const Lists = () => {
   const [lists, setLists] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState([]);
 
-  // Fetch movies data from the API
   const getMovies = async () => {
     try {
       const response = await axios.get('/movies', {
@@ -28,11 +27,9 @@ const Lists = () => {
     getMovies();
   }, []);
 
-  // Handle delete for selected movies (multiple)
   const handleDeleteSelected = async () => {
     if (window.confirm('Are you sure you want to delete the selected movies?')) {
       try {
-        // Batch delete selected movies
         await Promise.all(
           selectedMovies.map((id) =>
             axios.delete(`/movies/${id}`, {
@@ -43,7 +40,6 @@ const Lists = () => {
           )
         );
 
-        // Remove deleted movies from the UI
         setLists((prevLists) =>
           prevLists.filter((movie) => !selectedMovies.includes(movie.id))
         );
@@ -56,7 +52,6 @@ const Lists = () => {
     }
   };
 
-  // Handle delete for a single movie
   const handleDeleteSingle = async (id) => {
     if (window.confirm('Are you sure you want to delete this movie?')) {
       try {
@@ -66,7 +61,6 @@ const Lists = () => {
           },
         });
 
-        // Remove the deleted movie from the UI
         setLists((prevLists) => prevLists.filter((movie) => movie.id !== id));
         alert('Movie deleted successfully.');
       } catch (error) {
@@ -76,7 +70,6 @@ const Lists = () => {
     }
   };
 
-  // Handle selecting movies via checkboxes
   const handleSelect = (id) => {
     setSelectedMovies((prev) =>
       prev.includes(id) ? prev.filter((movieId) => movieId !== id) : [...prev, id]
@@ -150,7 +143,7 @@ const Lists = () => {
                 <td>{movie.voteAverage}</td>
                 <td>{movie.releaseDate}</td>
                 <td>
-                  {/* Button to edit the movie */}
+                <div className="button-container">
                   <button
                     className="button-edit"
                     type="button"
@@ -158,7 +151,6 @@ const Lists = () => {
                   >
                     Edit
                   </button>
-                  {/* Button to delete a single movie */}
                   <button
                     className="button-delete"
                     type="button"
@@ -166,7 +158,8 @@ const Lists = () => {
                   >
                     Delete
                   </button>
-                </td>
+                </div>
+              </td>
               </tr>
             ))}
           </tbody>

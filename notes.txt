@@ -1,0 +1,28 @@
+-- 1. Movie creation bug. ayaw ma add nung ibang movie (So far yung Moana lang yung ayaw).
+-- Di ko alam kung sa project yung bug or sa TMDBBaka may mali yung data galing sa TMDB kaya di ma save. 
+-- So Far yung Moana lang yung ayaw, pero yung mga ibang movies 
+-- na a-add ng maayos
+
+-- 2. Added very minor changes in CastsGateway. Added movieId and fixed the dateUpdate to dateUpdated in the update function
+-- ALTER TABLE casts
+-- MODIFY COLUMN dateUpdated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- 3. Modified some minor things in VideosGateway. In the databas I'm using (the ones from github) the column name is "description"
+-- but in the VideosGateay is "name" so I changed it to "description" to match the database column name. Also, dateUpdated wont let me
+-- save the current date so i made some changes it getting the new date.
+
+-- 4. Videos link bug. kapag nag add ng video with Youtube link, dinidisplay na is null or undefined, 
+-- pero pag ni-reload yung page, gumagana na. (Fixed)
+
+-- 5. Yung database, sa photos yung url at description naka int yung data type kaya di ma save. Kasi yung url 
+-- at description ng photos ay may mga special characters. 
+-- Alter some parts of the database(Photos, dateUpdated). Queries used
+-- ALTER TABLE photos
+-- MODIFY COLUMN url VARCHAR(255) NOT NULL;
+-- ALTER TABLE photos
+-- MODIFY COLUMN description TEXT NOT NULL;
+-- ALTER TABLE photos
+-- MODIFY COLUMN dateUpdated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
+
+-- 6. May mga columns na wala sa database. (Videos; videoKey, videoType, official text). (Fixed)
+
