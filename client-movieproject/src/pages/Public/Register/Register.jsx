@@ -47,7 +47,7 @@ function Register() {
             });
             console.log(res);
             localStorage.setItem('accessToken', res.data.access_token);
-            navigate('/login');
+            navigate('/');
           } catch (e) {
             console.log(e);
           } finally {
@@ -104,7 +104,7 @@ function Register() {
             </div>
             <div className='reg-container'>
               <small>Already have an account? </small>
-              <a href='/login'>
+              <a href='/'>
                 <small>Log In</small>
               </a>
             </div>

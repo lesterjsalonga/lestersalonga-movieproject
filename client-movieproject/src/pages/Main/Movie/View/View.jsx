@@ -12,20 +12,20 @@ function View() {
   const { movieId } = useParams();
   const navigate = useNavigate();
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [currentImg, setCurrentImg] = useState('');
-  const [currentCap, setCurrentCap] = useState('');
+  // Modal states
+  const [modalType, setModalType] = useState(null);
+  const [modalContent, setModalContent] = useState(null);
 
-  const openModalImage = (photoUrl, photoCap) => {
-    setCurrentImg(photoUrl);
-    setCurrentCap(photoCap);
-    setModalOpen(true);
+  // Function to open modal for different types of content
+  const openModal = (type, content) => {
+    setModalType(type);
+    setModalContent(content);
   };
 
-  const closeModalImage = () => {
-    setModalOpen(false);
-    setCurrentImg('');
-    setCurrentCap('');
+  // Function to close modal
+  const closeModal = () => {
+    setModalType(null);
+    setModalContent(null);
   };
 
   useEffect(() => {
@@ -42,6 +42,68 @@ function View() {
     }
   }, [movieId, setMovie, navigate]);
 
+  // Render modal based on type
+  const renderModal = () => {
+    switch(modalType) {
+      case 'cast':
+        return (
+          <div className="modal" onClick={closeModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <span className="close-web-btn" onClick={closeModal}>&times;</span>
+              <div className="modal-cast-details">
+                <img 
+                  src={modalContent.url} 
+                  alt={modalContent.name} 
+                  className="modal-cast-image"
+                />
+                <div className="modal-cast-info">
+                  <h2>{modalContent.name}</h2>
+                  <p>Character: {modalContent.characterName}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case 'video':
+        return (
+          <div className="modal" onClick={closeModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <span className="close-web-btn" onClick={closeModal}>&times;</span>
+              <iframe 
+                src={modalContent.url}
+                title={modalContent.name}
+                className="modal-video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              ></iframe>
+            </div>
+          </div>
+        );
+      
+      case 'photo':
+        return (
+          <div className="modal" onClick={closeModal}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <span className="close-web-btn" onClick={closeModal}>&times;</span>
+              <img 
+                src={modalContent.url} 
+                alt={modalContent.description || 'Movie Photo'} 
+                className="modal-photo"
+              />
+              {modalContent.description && (
+                <div className="caption-photo">{modalContent.description}</div>
+              )}
+            </div>
+          </div>
+        );
+      
+      default:
+        return null;
+    }
+  };
+
   return (
     <div className="view-container">
       {movie ? (
@@ -54,43 +116,34 @@ function View() {
             }}
           >
             <div className="banner-overlay">
-              <h1 className="movie-title">
-                {movie.title}
-                {movie.releaseYear && (
-                  <span style={{ 
-                    fontSize: '0.5em', 
-                    marginLeft: '10px', 
-                    color: 'rgba(255,255,255,0.7)' 
-                  }}>
-                    ({movie.releaseYear})
-                  </span>
-                )}
-              </h1>
-              {movie.genres && (
-                <div style={{
-                  display: 'flex', 
-                  gap: '10px', 
-                  marginBottom: '15px'
-                }}>
-                  {movie.genres.map((genre) => (
-                    <span 
-                      key={genre} 
-                      style={{
-                        backgroundColor: 'rgba(255,255,255,0.1)', 
-                        padding: '5px 10px',
-                        borderRadius: '15px',
-                        fontSize: '0.8rem'
-                      }}
-                    >
-                      {genre}
-                    </span>
-                  ))}
+              <div className="banner-content">
+
+                <div className="movie-banner-details">
+                  <h1 className="movie-title">
+                    {movie.title}
+                    {movie.releaseYear && (
+                      <span style={{ 
+                        fontSize: '0.5em', 
+                        marginLeft: '10px', 
+                        color: 'rgba(255,255,255,0.7)' 
+                      }}>
+                        ({movie.releaseYear})
+                      </span>
+                    )}
+                  </h1>
+                  {movie.genres && (
+                    <div className="genre-tags">
+                      {movie.genres.map((genre) => (
+                        <span key={genre} className="genre-tag">
+                          {genre}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
-
-          {/* Movie Details */}
           <div className="movie-details">
             {movie.tagline && (
               <div style={{
@@ -105,20 +158,27 @@ function View() {
             <h3 className="movie-overview">{movie.overview}</h3>
           </div>
 
-          {/* Cast & Crew */}
           {movie.casts && movie.casts.length > 0 ? (
             <div className="section">
               <h2>Cast & Crew</h2>
               <div className="card-display-cast">
                 {movie.casts.map((cast) => (
-                  <CastsCards
-                    key={cast.id}
-                    cast={{ 
+                  <div 
+                    key={cast.id} 
+                    onClick={() => openModal('cast', { 
                       url: cast.url, 
                       name: cast.name, 
                       characterName: cast.characterName 
-                    }} 
-                  />
+                    })}
+                  >
+                    <CastsCards
+                      cast={{ 
+                        url: cast.url, 
+                        name: cast.name, 
+                        characterName: cast.characterName 
+                      }} 
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -129,7 +189,6 @@ function View() {
             </div>
           )}
 
-          {/* Videos */}
           {movie.videos && movie.videos.length > 0 ? (
             <div className="section">
               <h2>Videos</h2>
@@ -149,13 +208,20 @@ function View() {
                   const embedUrl = getEmbedUrl(video.url);
 
                   return embedUrl ? (
-                    <VideoCards
-                      key={video.id}
-                      video={{ 
+                    <div 
+                      key={video.id} 
+                      onClick={() => openModal('video', { 
                         url: embedUrl, 
                         name: video.title || video.name 
-                      }}
-                    />
+                      })}
+                    >
+                      <VideoCards
+                        video={{ 
+                          url: embedUrl, 
+                          name: video.title || video.name 
+                        }}
+                      />
+                    </div>
                   ) : null;
                 })}
               </div>
@@ -167,17 +233,22 @@ function View() {
             </div>
           )}
 
-          {/* Photos */}
           {movie.photos && movie.photos.length > 0 ? (
             <div className="section">
               <h2>Photos</h2>
               <div className="photo-gallery">
                 {movie.photos.map((photo) => (
-                  <PhotoCards
-                    key={photo.id}
-                    photo={{ url: photo.url, description: photo.description }}
-                    onClick={() => openModalImage(photo.url, photo.description)}
-                  />
+                  <div 
+                    key={photo.id} 
+                    onClick={() => openModal('photo', { 
+                      url: photo.url, 
+                      description: photo.description 
+                    })}
+                  >
+                    <PhotoCards
+                      photo={{ url: photo.url, description: photo.description }}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -187,14 +258,7 @@ function View() {
               <p>No photos available.</p>
             </div>
           )}
-          
-          {modalOpen && (
-            <div className='modal' onClick={closeModalImage}>
-              <span className='close-web-btn' onClick={closeModalImage}>&times;</span>
-              <img className="modal-container-content" src={currentImg} alt={currentCap} />
-              <div className='caption-photo'>{currentCap}</div>
-            </div>
-          )}
+          {modalType && renderModal()}
         </>
       ) : (
         <p>Loading...</p>

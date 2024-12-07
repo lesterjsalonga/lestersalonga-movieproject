@@ -11,14 +11,14 @@ function Main() {
     if (confirmLogout) {
       setTimeout(() => {
         localStorage.removeItem('accessToken');
-        navigate('/login'); 
+        navigate('/'); 
       }, 3000); 
     }
   };
 
   useEffect(() => {
     if (!accessToken) { 
-      navigate('/login'); 
+      navigate('/'); 
     }
   }, [accessToken, navigate]); 
 

@@ -146,44 +146,156 @@
   border-radius: 10px;
 }
 
+/* Modal Styles */
 .modal {
   position: fixed;
-  z-index: 1000;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.9);
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
-.modal-container-content {
+.modal-cast-details {
+  display: flex;
+  align-items: center;
+  background: var(--bg-dark);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.modal-cast-image {
+  max-width: 300px;
+  max-height: 450px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.modal-cast-info {
+  color: var(--text-light);
+}
+
+.modal-video {
+  width: 90vw;
+  height: 80vh;
+}
+
+.modal-photo {
   max-width: 90%;
-  max-height: 80%;
-  object-fit: contain;
+  max-height: 80vh;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .caption-photo {
-  color: var(--text-light);
-  margin-top: 15px;
+  margin-top: 10px;
+  color: var(--text-muted);
   text-align: center;
+  font-size: 1rem;
 }
 
 .close-web-btn {
-  color: var(--text-light);
   position: absolute;
-  top: 20px;
-  right: 35px;
-  font-size: 40px;
-  font-weight: bold;
+  top: 10px;
+  right: 15px;
+  font-size: 2rem;
+  color: var(--text-light);
   cursor: pointer;
   transition: color 0.3s ease;
 }
 
 .close-web-btn:hover {
   color: var(--accent-color);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .movie-title {
+    font-size: 2.5rem;
+  }
+
+  .movie-title span {
+    font-size: 1.2rem;
+  }
+
+  .movie-details {
+    padding: 20px;
+  }
+
+  .movie-overview {
+    font-size: 1rem;
+  }
+
+  .section h2 {
+    font-size: 1.5rem;
+  }
+
+  .card-display-cast, .video-gallery, .photo-gallery {
+    gap: 10px;
+  }
+
+  .modal-cast-image {
+    max-width: 200px;
+    max-height: 300px;
+  }
+
+  .modal-video {
+    width: 95vw;
+    height: 70vh;
+  }
+
+  .modal-photo {
+    max-width: 95%;
+    max-height: 70vh;
+  }
+
+  .banner-content {
+    display: flex;
+    align-items: flex-end;
+    gap: 30px;
+  }
+  .movie-poster {
+    flex-shrink: 0;
+    max-width: 250px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
+
+  .poster-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .movie-poster:hover {
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    .banner-content {
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+    }
+  
+    .movie-poster {
+      max-width: 200px;
+    }
+  }
 }

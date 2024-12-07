@@ -11,7 +11,7 @@ import Landing from './pages/Main/Movie/Landing/Landing';
 
 const router = createBrowserRouter([
   {
-    path: '/login',
+    path: '/',
     element: <Login />,
   },
   {
