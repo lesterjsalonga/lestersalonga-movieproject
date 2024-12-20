@@ -12,17 +12,14 @@ function View() {
   const { movieId } = useParams();
   const navigate = useNavigate();
 
-  // Modal states
   const [modalType, setModalType] = useState(null);
   const [modalContent, setModalContent] = useState(null);
 
-  // Function to open modal for different types of content
   const openModal = (type, content) => {
     setModalType(type);
     setModalContent(content);
   };
 
-  // Function to close modal
   const closeModal = () => {
     setModalType(null);
     setModalContent(null);
@@ -42,7 +39,6 @@ function View() {
     }
   }, [movieId, setMovie, navigate]);
 
-  // Render modal based on type
   const renderModal = () => {
     switch(modalType) {
       case 'cast':

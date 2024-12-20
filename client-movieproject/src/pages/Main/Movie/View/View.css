@@ -146,7 +146,6 @@
   border-radius: 10px;
 }
 
-/* Modal Styles */
 .modal {
   position: fixed;
   top: 0;
@@ -222,7 +221,6 @@
   color: var(--accent-color);
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .movie-title {
     font-size: 2.5rem;

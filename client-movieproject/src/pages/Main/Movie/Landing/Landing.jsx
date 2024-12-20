@@ -46,7 +46,7 @@ const Landing = () => {
           The ultimate online hub for film lovers! Whether you're a casual viewer or a dedicated cinephile, CineSphere is designed to enhance your movie-watching experience by providing a rich database of films from every genre and era.
         </p>
         <button 
-          className='explore-button'
+          className='explore-button btn'
           onClick={() => navigate('/home')}
         >
           Explore Movies

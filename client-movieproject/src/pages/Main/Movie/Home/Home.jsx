@@ -60,13 +60,21 @@ const Home = () => {
                   className='nav-button prev-button' 
                   onClick={handlePrevMovie}
                 >
-                  &#10094;
+                  <div className="button-top">
+                    <span>❮</span>
+                  </div>
+                  <div className="button-bottom"></div>
+                  <div className="button-base"></div>
                 </button>
                 <button 
                   className='nav-button next-button' 
                   onClick={handleNextMovie}
                 >
-                  &#10095;
+                  <div className="button-top">
+                    <span>❯</span>
+                  </div>
+                  <div className="button-bottom"></div>
+                  <div className="button-base"></div>
                 </button>
               </div>
               <div className='featured-movie-info'>

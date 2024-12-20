@@ -158,7 +158,6 @@ body {
   border-color: #964EC2;
 }
 
-/* Custom Scrollbar */
 .table-container::-webkit-scrollbar {
   width: 10px;
 }

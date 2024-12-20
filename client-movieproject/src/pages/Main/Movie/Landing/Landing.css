@@ -156,23 +156,30 @@
   opacity: 0.9;
 }
 
-.explore-button {
-  background-color: var(--accent-color);
-  color: var(--text-light);
+.explore-button.btn {
+  font-size: 1.2rem;
+  padding: 1rem 2.5rem;
   border: none;
-  padding: 15px 30px;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: bold;
+  outline: none;
+  border-radius: 0.4rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.3s ease;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  background-color: rgb(14, 14, 26);
+  color: rgb(234, 234, 234);
+  font-weight: 700;
+  transition: 0.6s;
+  box-shadow: 0px 0px 60px #1f4c65;
+  -webkit-box-reflect: below 10px linear-gradient(to bottom, rgba(0,0,0,0.0), rgba(0,0,0,0.4));
 }
 
-.explore-button:hover {
-  background-color: #ff1721;
-  transform: scale(1.05);
+.explore-button.btn:active {
+  scale: 0.92;
+}
+
+.explore-button.btn:hover {
+  background: rgb(96, 2, 7);
+  background: linear-gradient(270deg, rgba(110, 5, 5, 0.736) 0%, rgba(219, 68, 68, 0.873) 60%);
+  color: rgb(162, 8, 8);
 }
 
 @media (max-width: 768px) {
@@ -193,7 +200,7 @@
     padding: 0 20px;
   }
 
-  .explore-button {
+  .explore-button.btn {
     padding: 12px 25px;
     font-size: 1rem;
   }
